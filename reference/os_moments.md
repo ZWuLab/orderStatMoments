@@ -38,7 +38,7 @@ os_moments(
 
   The distribution: one of `"norm"`, `"unif"`, `"exp"`, `"logis"`,
   `"gumbel"`, or an object made by
-  [`os_dist`](https://zwulab.github.io/osmoments/reference/os_dist.md).
+  [`os_dist`](https://zwulab.github.io/orderStatMoments/reference/os_dist.md).
   See Details for the standard members.
 
 - location, scale:
@@ -73,13 +73,13 @@ os_moments(
 
 ## Value
 
-An object of class `"osmoments"`, a list with the components `n`,
+An object of class `"orderStatMoments"`, a list with the components `n`,
 `ranks`, `alpha` (the means, named by rank), `var` (the variances), `B`
 (the covariance matrix, `NULL` when `cov = FALSE`), `quad_err` (the
 summed error estimates of the quadrature, see Details), `standard` (a
 list with the `alpha`, `var` and `B` of the standard member, before
 `location` and `scale` are applied, which
-[`os_blue`](https://zwulab.github.io/osmoments/reference/os_blue.md)
+[`os_blue`](https://zwulab.github.io/orderStatMoments/reference/os_blue.md)
 reads), `dist` (the `os_dist` object), `location`, `scale`, `cov`,
 `method`, `route` (`"closed"`, `"integrate"` or `"mixed"`), `checks`
 (the residuals of the run-time checks, `NA` where a check did not apply)
@@ -97,7 +97,7 @@ f\_{r:n}(x)\\dx, \qquad \mu\_{r,s:n} = \int\\\\\int\_{y \< z} y z
 f\_{r,s:n}(y, z)\\dy\\dz,\$\$ with \\B\_{ij} = \mu\_{r_i, r_j:n} -
 \alpha_i \alpha_j\\. The integrals are evaluated by adaptive quadrature
 ([`integrate`](https://rdrr.io/r/stats/integrate.html)) with four
-devices: the integrands on the log scale, so that the powers of the
+approaches: the integrands on the log scale, so that the powers of the
 tails never underflow; \\\log\\F(z) - F(y)\\\\ formed on the smaller
 tail, so that nothing cancels; the range split at the spike of the order
 statistic's density, at \\c_r \pm h_r\\ with \\c_r = Q(p_r)\\, \\p_r =
@@ -206,7 +206,7 @@ not closed forms, a full matrix needs one double integral per pair,
 
 ## References
 
-Wu, Z. and Tong, T. (2026). osmoments: Exact means, variances and
+Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances and
 covariances of order statistics in R. Manuscript. The computation, its
 verification and the comparison with other software.
 
@@ -216,7 +216,7 @@ statistics (exact and approximate). *Applied Statistics*, 31(2),
 
 ## See also
 
-[`os_dist`](https://zwulab.github.io/osmoments/reference/os_dist.md)
+[`os_dist`](https://zwulab.github.io/orderStatMoments/reference/os_dist.md)
 
 ## Examples
 

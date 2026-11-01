@@ -7,7 +7,7 @@ X\_{(j+1)}\\, with the ranks clipped to \\1, \dots, n\\. This function
 returns, for each probability in `p`, the ranks and the weights, so that
 the moments of the sample quantile follow from the moments of the order
 statistics through
-[`os_lin_moments`](https://zwulab.github.io/osmoments/reference/os_lin_moments.md).
+[`os_lin_moments`](https://zwulab.github.io/orderStatMoments/reference/os_lin_moments.md).
 The even-sample median, for example, is \\(X\_{(n/2)} +
 X\_{(n/2+1)})/2\\ under type 7.
 
@@ -66,7 +66,7 @@ packages. *The American Statistician*, 50(4), 361-365.
 
 ## See also
 
-[`os_lin_moments`](https://zwulab.github.io/osmoments/reference/os_lin_moments.md),
+[`os_lin_moments`](https://zwulab.github.io/orderStatMoments/reference/os_lin_moments.md),
 [`quantile`](https://rdrr.io/r/stats/quantile.html)
 
 ## Examples

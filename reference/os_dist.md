@@ -1,16 +1,16 @@
 # Define a distribution for the moments of its order statistics
 
 Builds the distribution object that
-[`os_moments`](https://zwulab.github.io/osmoments/reference/os_moments.md)
+[`os_moments`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
 takes in its `dist` argument, from the distribution function, the
 density and the quantile function of a continuous distribution. The
 object describes the standard member of a location-scale family:
-[`os_moments()`](https://zwulab.github.io/osmoments/reference/os_moments.md)
+[`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
 computes the moments for this member and applies its own `location` and
 `scale` arguments afterwards. A user who wants a \\t_5\\ distribution
 with location 3 and scale 2 supplies the \\t_5\\ functions here and
 passes `location = 3, scale = 2` to
-[`os_moments()`](https://zwulab.github.io/osmoments/reference/os_moments.md).
+[`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md).
 
 ## Usage
 
@@ -53,7 +53,7 @@ os_dist(
 
   Logical. `TRUE` if the density is symmetric about its median, that is
   \\Q(1 - u) = 2 Q(1/2) - Q(u)\\. A symmetric distribution lets
-  [`os_moments()`](https://zwulab.github.io/osmoments/reference/os_moments.md)
+  [`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
   halve the number of double integrals of a full matrix and check the
   reflection symmetry of its result.
 
@@ -83,7 +83,7 @@ none for a user distribution).
 \\\|x\|^{-\nu r - 1}\\ below and like \\x^{-\nu (n - r + 1) - 1}\\
 above, so \\E\|X\_{(r)}\|^k \< \infty\\ if and only if \\\nu_L r \> k\\
 and \\\nu_U (n - r + 1) \> k\\.
-[`os_moments()`](https://zwulab.github.io/osmoments/reference/os_moments.md)
+[`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
 applies this condition with \\k = 2\\ to every requested rank and
 refuses a moment that does not exist. A Cauchy parent, `tail = c(1, 1)`,
 has a median of five with a finite variance and extremes without a mean.
@@ -95,7 +95,7 @@ computes `log(p(x))` from an underflowing probability loses the tail,
 and the integrals with it. `os_dist()` checks that the three functions
 honor their arguments at the median and are vectorized, and that `d`
 integrates to \\1/2\\ between the quartiles, where `p` rises by \\1/2\\.
-[`os_moments()`](https://zwulab.github.io/osmoments/reference/os_moments.md)
+[`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
 checks that the log-tails and the log-density are finite at the median
 and at the split points of the smallest and the largest requested rank,
 and that the density of every order statistic it integrates has mass 1.
@@ -110,9 +110,9 @@ location does: a standard member whose own location is large, say
 \\10^8\\ with unit scale, loses the digits of \\x - Q(1/2)\\ in double
 precision and the computation stops with an error. Supply the standard
 member and pass the location to
-[`os_moments()`](https://zwulab.github.io/osmoments/reference/os_moments.md)
+[`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
 instead, which also keeps
-[`os_blue()`](https://zwulab.github.io/osmoments/reference/os_blue.md)
+[`os_blue()`](https://zwulab.github.io/orderStatMoments/reference/os_blue.md)
 exact.
 
 **Common parents.** Each function wraps the corresponding `stats`
@@ -136,7 +136,7 @@ the sign that `support` is missing.
 
 ## See also
 
-[`os_moments`](https://zwulab.github.io/osmoments/reference/os_moments.md)
+[`os_moments`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
 
 ## Examples
 
@@ -169,12 +169,12 @@ os_moments(5, ranks = 3, dist = cauchy)
 #> Exact moments of order statistics: cauchy (location 0, scale 1), n = 5, ranks 3
 #> alpha (means):
 #>            r3 
-#> -1.028762e-17 
+#> -1.285952e-17 
 #> B (covariance matrix):
 #>          r3
 #> r3 1.221253
 #> route: integrate; quadrature error estimate: 3.89e-14
-#> checks: reflection 1.39e-17; identities n/a
+#> checks: reflection 1.73e-17; identities n/a
 
 # A gamma with shape 2: a semi-bounded support, every moment finite
 gamma2 <- os_dist(function(q, lower.tail = TRUE, log.p = FALSE)

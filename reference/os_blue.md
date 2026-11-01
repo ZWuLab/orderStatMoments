@@ -20,10 +20,10 @@ os_blue(mom)
 
 - mom:
 
-  An object of class `"osmoments"` computed with `cov = TRUE` at two or
-  more ranks. The weights are computed from its `standard` component,
-  the moments of the standard member, so they do not depend on the
-  `location` and `scale` it was computed with.
+  An object of class `"orderStatMoments"` computed with `cov = TRUE` at
+  two or more ranks. The weights are computed from its `standard`
+  component, the moments of the standard member, so they do not depend
+  on the `location` and `scale` it was computed with.
 
 ## Value
 
@@ -58,9 +58,9 @@ warns when one fails by more than \\10^{-6}\\.
 
 **Conditions.** The distribution of `mom` is treated as the standard
 member of a location-scale family, which every
-[`os_dist()`](https://zwulab.github.io/osmoments/reference/os_dist.md)
+[`os_dist()`](https://zwulab.github.io/orderStatMoments/reference/os_dist.md)
 object is by construction; the required moments exist, which
-[`os_moments()`](https://zwulab.github.io/osmoments/reference/os_moments.md)
+[`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
 has checked; at least two distinct ranks are present, so that the design
 \\\[\mathbf 1, \bm\alpha\]\\ has rank two; and \\\bm B\\ is positive
 definite. The scale estimated is the family's scale parameter: the
@@ -74,8 +74,8 @@ parameters using order statistics. *Biometrika*, 39(1-2), 88-95.
 
 ## See also
 
-[`os_moments`](https://zwulab.github.io/osmoments/reference/os_moments.md),
-[`os_lin_moments`](https://zwulab.github.io/osmoments/reference/os_lin_moments.md)
+[`os_moments`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md),
+[`os_lin_moments`](https://zwulab.github.io/orderStatMoments/reference/os_lin_moments.md)
 
 ## Examples
 

@@ -1,10 +1,10 @@
 # Moments of linear combinations of order statistics
 
 For a statistic \\T = \sum_i w_i X\_{(r_i)}\\ over the ranks of an
-`osmoments` object, \\E\[T\] = \bm w'\bm\alpha\\ and \\\mathrm{Var}(T) =
-\bm w'\bm B\bm w\\, and for several statistics with the weights in the
-columns of a matrix \\\bm W\\, the means are \\\bm W'\bm\alpha\\ and the
-covariance matrix is \\\bm W'\bm B\bm W\\.
+`orderStatMoments` object, \\E\[T\] = \bm w'\bm\alpha\\ and
+\\\mathrm{Var}(T) = \bm w'\bm B\bm w\\, and for several statistics with
+the weights in the columns of a matrix \\\bm W\\, the means are \\\bm
+W'\bm\alpha\\ and the covariance matrix is \\\bm W'\bm B\bm W\\.
 
 ## Usage
 
@@ -21,8 +21,8 @@ os_lin_moments(w, mom)
 
 - mom:
 
-  An object of class `"osmoments"` computed with `cov = TRUE`, whose
-  ranks are those the weights refer to, in order.
+  An object of class `"orderStatMoments"` computed with `cov = TRUE`,
+  whose ranks are those the weights refer to, in order.
 
 ## Value
 
@@ -33,8 +33,8 @@ statistic) and `ranks`. The statistics are named by the column names of
 
 ## See also
 
-[`os_moments`](https://zwulab.github.io/osmoments/reference/os_moments.md),
-[`os_quantile_weights`](https://zwulab.github.io/osmoments/reference/os_quantile_weights.md)
+[`os_moments`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md),
+[`os_quantile_weights`](https://zwulab.github.io/orderStatMoments/reference/os_quantile_weights.md)
 
 ## Examples
 

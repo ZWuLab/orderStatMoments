@@ -3,4 +3,4 @@
 ### Get started
 
 - [Exact moments of order statistics with
-  osmoments](https://zwulab.github.io/osmoments/articles/osmoments.md):
+  orderStatMoments](https://zwulab.github.io/orderStatMoments/articles/orderStatMoments.md):
