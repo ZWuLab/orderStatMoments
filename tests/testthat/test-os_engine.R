@@ -34,14 +34,14 @@ test_that("a normal supplied through os_dist() reproduces the built-in normal", 
 })
 
 test_that("the cancellation-free difference agrees with the direct difference where that is accurate", {
-  cd <- osmoments:::.os_centered(osmoments:::.os_family("norm"))
+  cd <- orderStatMoments:::.os_centered(orderStatMoments:::.os_family("norm"))
   y <- -1.2; z <- c(-0.9, -0.3, 0.4, 2.5)
-  expect_equal(osmoments:::.os_logdiff(y, z, cd), log(pnorm(z) - pnorm(y)), tolerance = 1e-13)
+  expect_equal(orderStatMoments:::.os_logdiff(y, z, cd), log(pnorm(z) - pnorm(y)), tolerance = 1e-13)
   y <- 0.7; z <- c(0.8, 1.5, 3)
-  expect_equal(osmoments:::.os_logdiff(y, z, cd), log(pnorm(z) - pnorm(y)), tolerance = 1e-13)
+  expect_equal(orderStatMoments:::.os_logdiff(y, z, cd), log(pnorm(z) - pnorm(y)), tolerance = 1e-13)
   # deep in the upper tail the direct difference is zero in doubles and the tail form is not
-  expect_true(is.finite(osmoments:::.os_logdiff(40, 41, cd)))
-  expect_identical(osmoments:::.os_logdiff(0.5, 0.5, cd), -Inf)
+  expect_true(is.finite(orderStatMoments:::.os_logdiff(40, 41, cd)))
+  expect_identical(orderStatMoments:::.os_logdiff(0.5, 0.5, cd), -Inf)
 })
 
 test_that("a divergent second moment stops even when the tail index is not declared", {

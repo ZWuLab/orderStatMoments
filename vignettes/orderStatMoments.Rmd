@@ -1,17 +1,17 @@
 ---
-title: "Exact moments of order statistics with osmoments"
+title: "Exact moments of order statistics with orderStatMoments"
 output:
   rmarkdown::html_vignette:
     toc: false
 vignette: >
-  %\VignetteIndexEntry{Exact moments of order statistics with osmoments}
+  %\VignetteIndexEntry{Exact moments of order statistics with orderStatMoments}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
-library(osmoments)
+library(orderStatMoments)
 ```
 
 ## What this package computes
@@ -27,7 +27,7 @@ tables of the covariances of normal order statistics printed in the literature s
 $n = 50$. The software we found gives the means, or the means and variances, of single
 order statistics, or approximates the covariances.
 
-The `osmoments` package computes these moments exactly, for any ranks and any sample size,
+The `orderStatMoments` package computes these moments exactly, for any ranks and any sample size,
 by numerical integration of their defining integrals, or by closed-form expressions where
 the distribution has them. It covers the normal, uniform, exponential, logistic and Gumbel
 distributions, and any continuous distribution the user supplies through its distribution,
@@ -124,10 +124,10 @@ Install it from GitHub, with the vignette:
 
 ```{r install, eval = FALSE}
 # install.packages("remotes")
-remotes::install_github("ZWuLab/osmoments", build_vignettes = TRUE)
+remotes::install_github("ZWuLab/orderStatMoments", build_vignettes = TRUE)
 ```
 
-To cite the package in a publication, use `citation("osmoments")`, which gives the paper
+To cite the package in a publication, use `citation("orderStatMoments")`, which gives the paper
 of Wu and Tong (2026).
 
 The package imports nothing beyond base R and `stats`. It computes the moments of each
@@ -163,7 +163,7 @@ everywhere, which is how the package's tests check the quadrature against the cl
 ## What the result holds
 
 This section names the fields of the result that a user reads first, and says what the error
-estimate is and is not. `os_moments()` returns an object of class `"osmoments"`.
+estimate is and is not. `os_moments()` returns an object of class `"orderStatMoments"`.
 
 | Field | Content |
 | --- | --- |
@@ -352,7 +352,7 @@ are uncorrelated.
 
 ## Appendix A: how the integrals are evaluated
 
-This appendix states the integrals and the four numerical devices that evaluate them, for
+This appendix states the integrals and the four numerical approaches that evaluate them, for
 the reader who wants to know what "exact" rests on. The density of $X_{(r)}$ and the joint
 density of $X_{(r)}$ and $X_{(s)}$, $r < s$, are
 $$
@@ -363,14 +363,14 @@ f_{r,s:n}(y, z) &= \frac{n!}{(r-1)!\,(s-r-1)!\,(n-s)!} F(y)^{r-1} \{F(z) - F(y)\
 \end{aligned}
 $$
 for $y < z$, and the moments are their integrals against $x$, $x^2$ and $yz$ (David and
-Nagaraja, 2003). The package evaluates them with `integrate()` and four devices.
+Nagaraja, 2003). The package evaluates them with `integrate()` and four approaches.
 
 1. **Everything on the log scale.** The factorials overflow double precision ($n!$ alone
    does from $n = 171$ on), and the powers of the tail probabilities underflow to zero at
    large $n$. So the package works with logarithms. The log of the coefficient comes from
    `lbeta()`, the log powers of the tails from `p(x, log.p = TRUE)` and
    `p(x, lower.tail = FALSE, log.p = TRUE)`, and the log density from `d(x, log = TRUE)`.
-   The sum is exponentiated once. Working on the log scale is the device of Royston (1982) for the means of
+   The sum is exponentiated once. Working on the log scale is the approach of Royston (1982) for the means of
    normal order statistics, carried to the product moments.
 2. **No cancellation in $F(z) - F(y)$.** When both points lie above the median, $F(y)$ and
    $F(z)$ are close to one, and their difference loses its relative precision. The package
@@ -383,7 +383,7 @@ Nagaraja, 2003). The package evaluates them with `integrate()` and four devices.
    line can miss that region, and return a value near zero with a small claimed error. The
    package therefore splits the range at the peak plus and minus ten large-sample standard
    deviations of the order statistic, with a floor of $4/\sqrt{n+1}$ in the standardized
-   units of device 4. The peak then sits inside a finite piece. The inner integral of a
+   units of approach 4. The peak then sits inside a finite piece. The inner integral of a
    covariance is split the same way, around the peak of $X_{(s)}$. Its outer integral is
    split at the split points of both order statistics, because the inner quadrature
    changes its pieces where the outer variable crosses them.
@@ -523,5 +523,5 @@ Tietjen, G. L., Kahaner, D. K. and Beckman, R. J. (1976). Variances and covarian
 the normal order statistics for sample sizes 2 to 50. Report LA-6482-MS, Los Alamos
 Scientific Laboratory, Los Alamos, New Mexico.
 
-Wu, Z. and Tong, T. (2026). osmoments: Exact means, variances and covariances of order
+Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances and covariances of order
 statistics in R. Manuscript.

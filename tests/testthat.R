@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(osmoments)
+library(orderStatMoments)
 
-test_check("osmoments")
+test_check("orderStatMoments")

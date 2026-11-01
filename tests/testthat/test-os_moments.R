@@ -46,7 +46,7 @@ test_that("the methods and the route", {
 })
 
 test_that("the symmetry halving gives the full computation at n = 13", {
-  f <- osmoments:::.os_family("norm")
+  f <- orderStatMoments:::.os_family("norm")
   full <- os_dist(f$p, f$d, f$q, symmetric = FALSE, name = "norm-full")
   a <- os_moments(13, 1:13, full)
   b <- os_moments(13, 1:13, "norm")
@@ -95,7 +95,7 @@ test_that("the normal closed forms at n = 2 and 3, and n = 1 returns the parent"
 
 test_that("the object and its print method", {
   m <- os_moments(5, c(1, 3, 5), "logis", location = 2, scale = 3)
-  expect_s3_class(m, "osmoments")
+  expect_s3_class(m, "orderStatMoments")
   expect_identical(names(m$alpha), c("r1", "r3", "r5"))
   expect_identical(dimnames(m$B), list(c("r1", "r3", "r5"), c("r1", "r3", "r5")))
   expect_identical(m$n, 5L)
@@ -143,7 +143,7 @@ test_that("a variance that comes out zero or negative stops with an error", {
   # mocked to return zero, which gives a variance of exactly zero.
   # (the mass, pow = 0, is mocked to 1 so that the mass check passes and the guard is reached)
   local_mocked_bindings(.os_single = function(r, n, pow, ...) list(value = if (pow == 0) 1 else 0, abs.error = 0),
-                        .package = "osmoments")
+                        .package = "orderStatMoments")
   expect_error(os_moments(5, 3, "norm"), "variance of X_\\(3\\) came out as 0")
 })
 

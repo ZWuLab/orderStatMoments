@@ -1,8 +1,8 @@
 # ==============================================================================
 # File: os_engine.R
-# Purpose: The internal integrators of osmoments: the exact single and product
+# Purpose: The internal integrators of orderStatMoments: the exact single and product
 #          moments of order statistics by adaptive quadrature of the defining
-#          integrals, with four numerical devices: (1) log-scale integrands
+#          integrals, with four numerical approaches: (1) log-scale integrands
 #          through log.p and lower.tail, (2) the cancellation-free
 #          log{F(z) - F(y)} evaluated on the smaller tail, (3) the range split at
 #          the spike of the order statistic's density, (4) integration in the
@@ -15,11 +15,11 @@
 # INTERNAL HELPERS:
 #   - .os_ctrl()            The quadrature control constants from rel.tol
 #   - .os_centered()        The log-tails, log-density and quantile function in centered units
-#   - .os_breaks()          Device (3): the split points of rank r, c_r +/- h_r
+#   - .os_breaks()          Approach (3): the split points of rank r, c_r +/- h_r
 #   - .os_width()           c_r and the delta-method half-width w_r of rank r
 #   - .os_tolscale()        min(1, w): the scale of the absolute tolerances of rank r
 #   - .os_integrate_split() integrate() over the pieces, values and error estimates summed
-#   - .os_logdiff()         Device (2): log{F(z) - F(y)} on the smaller tail
+#   - .os_logdiff()         Approach (2): log{F(z) - F(y)} on the smaller tail
 #   - .os_xlog()            k * log(v) with the k = 0 guard against 0 * (-Inf)
 #   - .os_single()          E[X_(r)^pow], pow = 1 or 2, one integral
 #   - .os_prod()            E[X_(r) X_(s)], r < s, nested quadrature
@@ -47,7 +47,7 @@
 
 #' The distribution in standardized units t = {x - Q(1/2)} / spread
 #'
-#' Device (4). The spread is the standard member's interquartile range divided
+#' Approach (4). The spread is the standard member's interquartile range divided
 #' by that of the standard normal, 2 qnorm(3/4) = 1.349, so that it is exactly 1
 #' for the normal, for which t = x. Returns closures lF(t) = log F, lS(t) =
 #' log(1 - F), ld(t) = log of the density of t (the density of x times the
@@ -77,7 +77,7 @@
        center = c0, spread = sp)
 }
 
-#' The split points of rank r (device 3)
+#' The split points of rank r (approach 3)
 #'
 #' Why this exists: the density of X_(r) concentrates around c_r = Q(p_r),
 #' p_r = r/(n+1), in a region whose width shrinks like n^{-1/2}, while the
@@ -202,7 +202,7 @@
   list(value = val, abs.error = err)
 }
 
-#' log{F(z) - F(y)} for y <= z without cancellation (device 2)
+#' log{F(z) - F(y)} for y <= z without cancellation (approach 2)
 #'
 #' Why this exists: the joint density carries {F(z) - F(y)}^(s-r-1), and the
 #' log-scale integrand takes (s-r-1) log of the difference, which therefore
@@ -240,13 +240,13 @@
 #' E[(X_(r) - shift)^pow] in the engine's units by one exact integral
 #'
 #' Density: f_{r:n}(t) = C F(t)^(r-1) {1 - F(t)}^(n-r) f(t) with
-#' C = n!/{(r-1)! (n-r)!}, assembled on the log scale (device 1): lbeta for the
+#' C = n!/{(r-1)! (n-r)!}, assembled on the log scale (approach 1): lbeta for the
 #' coefficient (the difference of three lgamma values lost 1e-9 of a central
 #' rank's covariance at n = 1e6), the log-tails for the powers, the log-density,
 #' exponentiated once. With pow = 0 the integral is the mass of the density,
 #' which os_moments() checks against 1.
 #' The moment is taken about `shift`, which os_moments() sets to the order
-#' statistic's own location c_r = Q(r/(n+1)) (device 4): with the moments taken
+#' statistic's own location c_r = Q(r/(n+1)) (approach 4): with the moments taken
 #' about the median, a variance was the small difference of two moments of size
 #' (c_r - c)^2, and its relative error grew like that size over the variance,
 #' n^2 for the uniform minimum (7 digits left at n = 1000, none at
@@ -294,7 +294,7 @@
 #' returned estimate is the outer integral's own. The tails at the outer point y
 #' are evaluated once per inner integral, and log S(z) once per inner node, which
 #' saves about a tenth of the time and leaves every value unchanged. The moment
-#' is taken about the two locations sr and ss of the order statistics (device 4,
+#' is taken about the two locations sr and ss of the order statistics (approach 4,
 #' see .os_single()), which are added to the split points of their ranks, so
 #' that the covariance E[(Y - c_r)(Z - c_s)] - m_r m_s is formed from small
 #' quantities. The inner absolute tolerance is divided by max(1, |y - sr|),

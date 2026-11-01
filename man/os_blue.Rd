@@ -7,7 +7,7 @@
 os_blue(mom)
 }
 \arguments{
-\item{mom}{An object of class \code{"osmoments"} computed with
+\item{mom}{An object of class \code{"orderStatMoments"} computed with
 \code{cov = TRUE} at two or more ranks. The weights are computed from
 its \code{standard} component, the moments of the standard member, so
 they do not depend on the \code{location} and \code{scale} it was

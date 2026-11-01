@@ -1,8 +1,8 @@
 # ==============================================================================
-# File: osmoments-package.R
-# Purpose: Package-level documentation of osmoments and the imports from stats.
+# File: orderStatMoments-package.R
+# Purpose: Package-level documentation of orderStatMoments and the imports from stats.
 
-#' osmoments: Exact Moments of Order Statistics
+#' orderStatMoments: Exact Moments of Order Statistics
 #'
 #' Computes the exact means, variances and covariances of the order statistics
 #' \eqn{X_{(1)} \le \dots \le X_{(n)}} of an i.i.d. sample from a continuous
@@ -18,13 +18,13 @@
 #' and \code{\link{os_blue}} give the moments of sample quantiles and of any
 #' linear combination of order statistics, and Lloyd's best linear unbiased
 #' estimators of location and scale. The vignette walks through all of it:
-#' \code{vignette("osmoments")}. The paper of Wu and Tong (2026) describes the
+#' \code{vignette("orderStatMoments")}. The paper of Wu and Tong (2026) describes the
 #' computation, its verification against closed forms, identities and printed
-#' tables, and the comparison with other software; \code{citation("osmoments")}
+#' tables, and the comparison with other software; \code{citation("orderStatMoments")}
 #' gives the reference.
 #'
 #' @references
-#' Wu, Z. and Tong, T. (2026). osmoments: Exact means, variances and covariances
+#' Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances and covariances
 #' of order statistics in R. Manuscript.
 #'
 #' @keywords internal

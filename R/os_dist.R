@@ -1,6 +1,6 @@
 # ==============================================================================
 # File: os_dist.R
-# Purpose: The distribution object of osmoments: the public constructor
+# Purpose: The distribution object of orderStatMoments: the public constructor
 #          os_dist() for a user-supplied distribution, the internal constructor
 #          of the five built-in families, the validator, and the internal
 #          Gumbel functions (maximum form) with accurate log-tails.

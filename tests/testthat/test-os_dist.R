@@ -25,7 +25,7 @@ test_that("os_dist() validates its arguments and the functions' behavior at the 
 })
 
 test_that("the built-in families have the right centers, supports and symmetry", {
-  f <- osmoments:::.os_family
+  f <- orderStatMoments:::.os_family
   expect_equal(f("norm")$center, 0); expect_true(f("norm")$symmetric)
   expect_equal(f("unif")$center, 0.5); expect_true(f("unif")$symmetric)
   expect_identical(f("unif")$support, c(0, 1))
@@ -37,7 +37,7 @@ test_that("the built-in families have the right centers, supports and symmetry",
 })
 
 test_that("the Gumbel functions keep their log-tails finite and accurate", {
-  p <- osmoments:::.pgumbel; d <- osmoments:::.dgumbel; q <- osmoments:::.qgumbel
+  p <- orderStatMoments:::.pgumbel; d <- orderStatMoments:::.dgumbel; q <- orderStatMoments:::.qgumbel
   x <- seq(-5, 700, by = 0.5)
   expect_true(all(is.finite(p(x, log.p = TRUE))))
   expect_true(all(is.finite(p(x, lower.tail = FALSE, log.p = TRUE))))

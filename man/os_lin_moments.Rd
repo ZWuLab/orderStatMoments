@@ -10,7 +10,7 @@ os_lin_moments(w, mom)
 \item{w}{A numeric vector with one weight per rank of \code{mom}, or a
 matrix with one such column per statistic.}
 
-\item{mom}{An object of class \code{"osmoments"} computed with
+\item{mom}{An object of class \code{"orderStatMoments"} computed with
 \code{cov = TRUE}, whose ranks are those the weights refer to, in order.}
 }
 \value{
@@ -21,7 +21,7 @@ A list with \code{mean} (one value per statistic), \code{var} (the
 }
 \description{
 For a statistic \eqn{T = \sum_i w_i X_{(r_i)}} over the ranks of an
-\code{osmoments} object, \eqn{E[T] = \bm w'\bm\alpha} and
+\code{orderStatMoments} object, \eqn{E[T] = \bm w'\bm\alpha} and
 \eqn{\mathrm{Var}(T) = \bm w'\bm B\bm w}, and for several statistics with
 the weights in the columns of a matrix \eqn{\bm W}, the means are
 \eqn{\bm W'\bm\alpha} and the covariance matrix is \eqn{\bm W'\bm B\bm W}.

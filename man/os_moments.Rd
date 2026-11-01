@@ -48,7 +48,7 @@ outer integral at \code{100 * rel.tol}.}
 a residual exceeds \eqn{10^{-6}}.}
 }
 \value{
-An object of class \code{"osmoments"}, a list with the components
+An object of class \code{"orderStatMoments"}, a list with the components
   \code{n}, \code{ranks}, \code{alpha} (the means, named by rank),
   \code{var} (the variances), \code{B} (the covariance matrix, \code{NULL}
   when \code{cov = FALSE}), \code{quad_err} (the summed error estimates of
@@ -81,7 +81,7 @@ and the moments are
   \mu_{r,s:n} = \int\!\!\int_{y < z} y z f_{r,s:n}(y, z)\,dy\,dz,}
 with \eqn{B_{ij} = \mu_{r_i, r_j:n} - \alpha_i \alpha_j}. The integrals are
 evaluated by adaptive quadrature (\code{\link[stats]{integrate}}) with four
-devices: the integrands on the log scale, so that the powers of the tails
+approaches: the integrands on the log scale, so that the powers of the tails
 never underflow; \eqn{\log\{F(z) - F(y)\}} formed on the smaller tail, so
 that nothing cancels; the range split at the spike of the order statistic's
 density, at \eqn{c_r \pm h_r} with \eqn{c_r = Q(p_r)}, \eqn{p_r = r/(n+1)}
@@ -193,7 +193,7 @@ os_moments(20, ranks = c(1, 5, 10, 20), dist = "exp", scale = 2)
 os_moments(100, ranks = c(1, 100), dist = "gumbel", cov = FALSE)
 }
 \references{
-Wu, Z. and Tong, T. (2026). osmoments: Exact means, variances and covariances
+Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances and covariances
 of order statistics in R. Manuscript. The computation, its verification and
 the comparison with other software.
 

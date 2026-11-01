@@ -1,8 +1,8 @@
-Package: osmoments
+Package: orderStatMoments
 Type: Package
 Title: Exact Moments of Order Statistics
-Version: 0.1.0
-Date: 2026-10-16
+Version: 0.2.0
+Date: 2026-11-01
 Authors@R: c(
     person("Zheyang", "Wu", email = "zheyangwu@wpi.edu", role = c("aut", "cre"))
     )
@@ -16,10 +16,10 @@ Description: Computes the exact means, variances and covariances of the order
     quantiles (under the nine definitions of R's quantile() function), and Lloyd's
     best linear unbiased estimators of location and scale from any subset of
     ranks. The computation and its verification are described by Wu and Tong
-    (2026) in 'osmoments: Exact Means, Variances and Covariances of Order
+    (2026) in 'orderStatMoments: Exact Means, Variances and Covariances of Order
     Statistics in R' (manuscript).
-URL: https://zwulab.github.io/osmoments/, https://github.com/ZWuLab/osmoments
-BugReports: https://github.com/ZWuLab/osmoments/issues
+URL: https://zwulab.github.io/orderStatMoments/, https://github.com/ZWuLab/orderStatMoments
+BugReports: https://github.com/ZWuLab/orderStatMoments/issues
 License: GPL (>= 3)
 Encoding: UTF-8
 Imports: stats

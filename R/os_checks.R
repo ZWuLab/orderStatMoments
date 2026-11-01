@@ -1,6 +1,6 @@
 # ==============================================================================
 # File: os_checks.R
-# Purpose: The conditions and run-time checks of osmoments: the moment
+# Purpose: The conditions and run-time checks of orderStatMoments: the moment
 #          condition by rank from the tail indices, the finiteness probe of a
 #          distribution's log-tails at the split points, the reflection check
 #          for a symmetric parent, and the permutation identities on a complete

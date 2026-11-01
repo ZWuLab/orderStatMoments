@@ -1,12 +1,12 @@
 
-# osmoments
+# orderStatMoments
 
 The means, variances and covariances of order statistics, the sorted values of a sample,
 are what the standard error of a sample quantile, the variance of a range, or the best
 linear estimator of a mean from a five-number summary are built from. Printed tables of
 the covariances of normal order statistics stop at n = 50 in the sources we found, and the
 software we found gives the moments of single order statistics or approximates the
-covariances of the normal by a series. osmoments computes the exact means, variances and
+covariances of the normal by a series. orderStatMoments computes the exact means, variances and
 covariances of order statistics, at any ranks and any sample size, by numerical evaluation
 of the defining integrals. Five families are built in, the normal, uniform, exponential,
 logistic and Gumbel, and any other continuous distribution enters through its
@@ -34,13 +34,13 @@ satisfied within 1e-9. The vignette states each check and its limits.
 
 ```r
 # install.packages("remotes")
-remotes::install_github("ZWuLab/osmoments", build_vignettes = TRUE)
+remotes::install_github("ZWuLab/orderStatMoments", build_vignettes = TRUE)
 ```
 
 ## Example
 
 ```r
-library(osmoments)
+library(orderStatMoments)
 
 # the means and the covariance matrix of the minimum, the quartiles and the maximum
 # of 25 standard normal observations
@@ -74,18 +74,18 @@ os_moments(5, dist = t5)
 
 The vignette walks through the families, a user-supplied distribution, the linear layer,
 what the result holds and how the integrals are evaluated. It is at
-https://zwulab.github.io/osmoments/ and, after the installation above,
-`vignette("osmoments")`.
+https://zwulab.github.io/orderStatMoments/ and, after the installation above,
+`vignette("orderStatMoments")`.
 
 ## Citation
 
 The paper that describes the package, its verification and the comparison with other
 software is
 
-Wu, Z. and Tong, T. (2026). osmoments: Exact means, variances and covariances of order
+Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances and covariances of order
 statistics in R. Manuscript.
 
-`citation("osmoments")` prints this reference.
+`citation("orderStatMoments")` prints this reference.
 
 ## References
 

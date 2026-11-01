@@ -53,7 +53,7 @@ test_that("the permutation identities hold on complete rank sets for every famil
 test_that("reflection symmetry holds without being imposed, for the normal and the logistic at n = 25", {
   rk <- c(1, 7, 13, 19, 25)
   for (fam in c("norm", "logis")) {
-    f <- osmoments:::.os_family(fam)
+    f <- orderStatMoments:::.os_family(fam)
     full <- os_dist(f$p, f$d, f$q, symmetric = FALSE, name = fam)    # no halving, no closed forms
     m <- os_moments(25, rk, full, method = "integrate")
     expect_true(is.na(m$checks$reflection))

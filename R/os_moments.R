@@ -1,6 +1,6 @@
 # ==============================================================================
 # File: os_moments.R
-# Purpose: The main function of osmoments: os_moments() returns the exact mean
+# Purpose: The main function of orderStatMoments: os_moments() returns the exact mean
 #          vector and covariance matrix of the order statistics of a continuous
 #          distribution at the requested ranks, from the closed forms where the
 #          family has them and from the integrators of os_engine.R otherwise,
@@ -10,7 +10,7 @@
 #
 # EXPORTED FUNCTIONS:
 #   - os_moments()        Exact alpha, variances and B at the requested ranks
-#   - print.osmoments()   Print method
+#   - print.orderStatMoments()   Print method
 #
 # INTERNAL HELPERS:
 #   - .os_validate_args() Argument checks of os_moments()
@@ -52,7 +52,7 @@
 #' @param check Whether to run the run-time checks of the Details and warn when
 #'   a residual exceeds \eqn{10^{-6}}.
 #'
-#' @return An object of class \code{"osmoments"}, a list with the components
+#' @return An object of class \code{"orderStatMoments"}, a list with the components
 #'   \code{n}, \code{ranks}, \code{alpha} (the means, named by rank),
 #'   \code{var} (the variances), \code{B} (the covariance matrix, \code{NULL}
 #'   when \code{cov = FALSE}), \code{quad_err} (the summed error estimates of
@@ -77,7 +77,7 @@
 #'   \mu_{r,s:n} = \int\!\!\int_{y < z} y z f_{r,s:n}(y, z)\,dy\,dz,}
 #' with \eqn{B_{ij} = \mu_{r_i, r_j:n} - \alpha_i \alpha_j}. The integrals are
 #' evaluated by adaptive quadrature (\code{\link[stats]{integrate}}) with four
-#' devices: the integrands on the log scale, so that the powers of the tails
+#' approaches: the integrands on the log scale, so that the powers of the tails
 #' never underflow; \eqn{\log\{F(z) - F(y)\}} formed on the smaller tail, so
 #' that nothing cancels; the range split at the spike of the order statistic's
 #' density, at \eqn{c_r \pm h_r} with \eqn{c_r = Q(p_r)}, \eqn{p_r = r/(n+1)}
@@ -188,7 +188,7 @@
 #' os_moments(20, ranks = c(1, 5, 10, 20), dist = "exp", scale = 2)
 #' os_moments(100, ranks = c(1, 100), dist = "gumbel", cov = FALSE)
 #' @references
-#' Wu, Z. and Tong, T. (2026). osmoments: Exact means, variances and covariances
+#' Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances and covariances
 #' of order statistics in R. Manuscript. The computation, its verification and
 #' the comparison with other software.
 #'
@@ -335,17 +335,17 @@ os_moments <- function(n, ranks = seq_len(n), dist = "norm", location = 0, scale
                  standard = list(alpha = alpha0, var = var0, B = B0),
                  dist = dist, location = location, scale = scale, cov = cov,
                  method = method, route = route, checks = checks, call = match.call()),
-            class = "osmoments")
+            class = "orderStatMoments")
 }
 
-#' Print an osmoments object
+#' Print an orderStatMoments object
 #'
-#' @param x An object of class \code{"osmoments"}.
+#' @param x An object of class \code{"orderStatMoments"}.
 #' @param digits The number of significant digits.
 #' @param ... Unused.
 #' @return \code{x}, invisibly.
 #' @export
-print.osmoments <- function(x, digits = 7L, ...) {
+print.orderStatMoments <- function(x, digits = 7L, ...) {
   cat("Exact moments of order statistics: ", x$dist$name,
       " (location ", format(x$location), ", scale ", format(x$scale), "), n = ", x$n,
       ", ranks ", paste(x$ranks, collapse = " "), "\n", sep = "")
@@ -399,7 +399,7 @@ print.osmoments <- function(x, digits = 7L, ...) {
 
 #' The mass of the density of X_(r), against 1
 #'
-#' Device (3) splits the range at the peak of each order statistic and the
+#' Approach (3) splits the range at the peak of each order statistic and the
 #' parent's tails, and a second mode of the parent can fall between the nodes of
 #' a piece: for the mixture 0.9 N(0, 0.01) + 0.1 N(10, 0.01) the mass at 10 was
 #' missed entirely at n = 1, and the mean came back as 0.0014 instead of 1 with

@@ -1,6 +1,6 @@
 # ==============================================================================
 # File: os_linear.R
-# Purpose: The linear layer of osmoments over the moments of os_moments(): the
+# Purpose: The linear layer of orderStatMoments over the moments of os_moments(): the
 #          ranks and weights of the nine sample quantile definitions of R's
 #          quantile(), the mean and covariance of any linear combination of
 #          order statistics, and Lloyd's best linear unbiased estimators of
@@ -14,7 +14,7 @@
 # INTERNAL HELPERS:
 #   - .os_quantile_jh()      The (j, h) of each definition, as quantile.default computes them
 #   - .os_pct_names()        The "25%" style names of quantile()
-#   - .os_check_mom()        An osmoments object with its covariance matrix
+#   - .os_check_mom()        An orderStatMoments object with its covariance matrix
 
 #################### EXPORTED MAIN FUNCTIONS ####################
 
@@ -95,14 +95,14 @@ os_quantile_weights <- function(p, n, type = 7) {
 #' Moments of linear combinations of order statistics
 #'
 #' For a statistic \eqn{T = \sum_i w_i X_{(r_i)}} over the ranks of an
-#' \code{osmoments} object, \eqn{E[T] = \bm w'\bm\alpha} and
+#' \code{orderStatMoments} object, \eqn{E[T] = \bm w'\bm\alpha} and
 #' \eqn{\mathrm{Var}(T) = \bm w'\bm B\bm w}, and for several statistics with
 #' the weights in the columns of a matrix \eqn{\bm W}, the means are
 #' \eqn{\bm W'\bm\alpha} and the covariance matrix is \eqn{\bm W'\bm B\bm W}.
 #'
 #' @param w A numeric vector with one weight per rank of \code{mom}, or a
 #'   matrix with one such column per statistic.
-#' @param mom An object of class \code{"osmoments"} computed with
+#' @param mom An object of class \code{"orderStatMoments"} computed with
 #'   \code{cov = TRUE}, whose ranks are those the weights refer to, in order.
 #'
 #' @return A list with \code{mean} (one value per statistic), \code{var} (the
@@ -149,7 +149,7 @@ os_lin_moments <- function(w, mom) {
 #' with the weights of the Details. They are unbiased and have the smallest
 #' variance among linear unbiased estimators from these ranks.
 #'
-#' @param mom An object of class \code{"osmoments"} computed with
+#' @param mom An object of class \code{"orderStatMoments"} computed with
 #'   \code{cov = TRUE} at two or more ranks. The weights are computed from
 #'   its \code{standard} component, the moments of the standard member, so
 #'   they do not depend on the \code{location} and \code{scale} it was
@@ -282,11 +282,11 @@ os_blue <- function(mom) {
 #' @noRd
 .os_pct_names <- function(p, type) names(stats::quantile(c(0, 1), probs = p, type = type))
 
-#' An osmoments object with its covariance matrix, or an error
+#' An orderStatMoments object with its covariance matrix, or an error
 #' @keywords internal
 #' @noRd
 .os_check_mom <- function(mom, who) {
-  if (!inherits(mom, "osmoments"))
+  if (!inherits(mom, "orderStatMoments"))
     stop(who, ": 'mom' must be an object returned by os_moments()", call. = FALSE)
   if (is.null(mom$B))
     stop(who, ": 'mom' was computed with cov = FALSE; the covariance matrix is needed",
