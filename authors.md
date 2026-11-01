@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/ZWuLab/orderStatMoments/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/ZWuLab/orderStatMoments/blob/v0.2.0/inst/CITATION)
 
 Wu, Z. and Tong, T. (2026). orderStatMoments: Exact Means, Variances and
 Covariances of Order Statistics in R. Manuscript.
