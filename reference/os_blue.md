@@ -22,16 +22,22 @@ os_blue(mom)
 
   An object of class `"orderStatMoments"` computed with `cov = TRUE` at
   two or more ranks. The weights are computed from its `standard`
-  component, the moments of the standard member, so they do not depend
-  on the `location` and `scale` it was computed with.
+  component, the moments of the standard member of the family (the
+  member with the shape parameters of the call and no shift or
+  multiplier), so they do not depend on the other parameters of the
+  family or on the `os_shift` and `os_multiplier` it was computed with.
 
 ## Value
 
-A list with `w_location` and `w_scale` (the weight vectors, named by
-rank), `var_location`, `var_scale` and `cov` (the variances and the
-covariance of the two estimators per unit of the squared scale
-parameter, so that \\\mathrm{Var}(\hat\mu) = \sigma^2 \cdot\\
-`var_location`), `ranks`, `n` and `dist`.
+A list with `w_mu` and `w_sigma` (the weight vectors of \\\hat\mu\\ and
+\\\hat\sigma\\, named by rank), `var_mu`, `var_sigma` and `cov` (the
+variances and the covariance of the two estimators per unit of the
+squared scale parameter, so that \\\mathrm{Var}(\hat\mu) = \sigma^2
+\cdot\\ `var_mu`), `ranks`, `n` and `dist`. The names say which
+parameter of the location-scale family each output belongs to, \\\mu\\
+or \\\sigma\\. These are the unknown parameters that are estimated, as
+distinct from the known constants `os_shift` and `os_multiplier` of
+[`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md).
 
 ## Details
 
@@ -56,16 +62,21 @@ conditions, \\\bm w\_\mu'\mathbf 1 = 1\\, \\\bm w\_\mu'\bm\alpha = 0\\,
 \\\bm w\_\sigma'\mathbf 1 = 0\\ and \\\bm w\_\sigma'\bm\alpha = 1\\, and
 warns when one fails by more than \\10^{-6}\\.
 
-**Conditions.** The distribution of `mom` is treated as the standard
-member of a location-scale family, which every
+**Conditions.** The standard member of `mom` is taken as the \\Z\\ of
+the location-scale family \\\mu + \sigma Z\\. For a built-in family it
+is the member with the shape parameters of the call (the degrees of
+freedom of a \\t\\, the shape of a gamma or a Weibull, the `sdlog` of a
+lognormal), and for a user's distribution it is the distribution that
 [`os_dist()`](https://zwulab.github.io/orderStatMoments/reference/os_dist.md)
-object is by construction; the required moments exist, which
+was given. The required moments exist, which
 [`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
 has checked; at least two distinct ranks are present, so that the design
 \\\[\mathbf 1, \bm\alpha\]\\ has rank two; and \\\bm B\\ is positive
-definite. The scale estimated is the family's scale parameter: the
-standard deviation for the normal, the scale of the logistic or Gumbel,
-and the length of the support for the uniform.
+definite. The \\\sigma\\ that is estimated is the multiplier of the
+standard member: the standard deviation for the normal, the scale of the
+logistic, the Gumbel, the gamma or the Weibull, the length of the
+support for the uniform, and \\\exp(\mathrm{meanlog})\\ for the
+lognormal, with \\\mu\\ a shift (a threshold) of the family.
 
 ## References
 
@@ -82,9 +93,9 @@ parameters using order statistics. *Biometrika*, 39(1-2), 88-95.
 ``` r
 m <- os_moments(9, ranks = c(1, 3, 5, 7, 9))
 b <- os_blue(m)
-b$w_location                     # sums to one
+b$w_mu                           # sums to one
 #>        r1        r3        r5        r7        r9 
 #> 0.1457682 0.2382168 0.2320301 0.2382168 0.1457682 
-sqrt(b$var_location)             # SD of the location estimate per unit sigma
+sqrt(b$var_mu)                   # SD of the location estimate per unit sigma
 #> [1] 0.3375654
 ```

@@ -3,14 +3,12 @@
 Builds the distribution object that
 [`os_moments`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
 takes in its `dist` argument, from the distribution function, the
-density and the quantile function of a continuous distribution. The
-object describes the standard member of a location-scale family:
+density and the quantile function of a continuous distribution that is
+not among the built-in families. The three functions define the
+distribution itself, with its parameters fixed inside them.
 [`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
-computes the moments for this member and applies its own `location` and
-`scale` arguments afterwards. A user who wants a \\t_5\\ distribution
-with location 3 and scale 2 supplies the \\t_5\\ functions here and
-passes `location = 3, scale = 2` to
-[`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md).
+computes the moments of the order statistics of this distribution, and
+its arguments `os_shift` and `os_multiplier` give those of \\a + bX\\.
 
 ## Usage
 
@@ -22,7 +20,8 @@ os_dist(
   support = c(-Inf, Inf),
   symmetric = FALSE,
   tail = c(Inf, Inf),
-  name = "user"
+  name = "user",
+  breaks = NULL
 )
 ```
 
@@ -69,24 +68,46 @@ os_dist(
 
   A label for printing.
 
+- breaks:
+
+  Numeric vector, or `NULL` for none: the points strictly inside the
+  support at which the density is not smooth, that is, where it has a
+  kink or a jump (the median of the Laplace distribution, the mode of a
+  triangular distribution, the knots of a piecewise density). The
+  density must be finite there, and it may be zero.
+  [`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
+  cuts every integral at these points (see Details). For a symmetric
+  distribution the points must be symmetric about the median.
+
 ## Value
 
 An object of class `"os_dist"`: a list with the components `name`, `p`,
 `d`, `q`, `support`, `symmetric`, `tail`, `center` (the median
-\\Q(1/2)\\) and `closed` (the closed-form moments the distribution has,
-none for a user distribution).
+\\Q(1/2)\\), `closed` (the closed-form moments the distribution has,
+none for a user's distribution) and `breaks` (sorted, `NULL` when there
+are none).
 
 ## Details
 
-**The moment condition.** For a parent whose density decays like
+The thirteen built-in families need no call of `os_dist()`: the normal,
+uniform, exponential, logistic, Gumbel, Student \\t\\, Cauchy, gamma,
+chi-square, beta, lognormal, Weibull and \\F\\ distributions are given
+to
+[`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
+by name, with R's own parameters, and the package sets their supports
+and tail indices.
+
+**The moment condition.** For a distribution whose density decays like
 \\\|x\|^{-\nu - 1}\\, the density of \\X\_{(r)}\\ decays like
-\\\|x\|^{-\nu r - 1}\\ below and like \\x^{-\nu (n - r + 1) - 1}\\
-above, so \\E\|X\_{(r)}\|^k \< \infty\\ if and only if \\\nu_L r \> k\\
-and \\\nu_U (n - r + 1) \> k\\.
+\\\|x\|^{-\nu r - 1}\\ in the lower tail and like \\x^{-\nu (n -
+r + 1) - 1}\\ in the upper tail, so \\E\|X\_{(r)}\|^k \< \infty\\ if and
+only if \\\nu_L r \> k\\ and \\\nu_U (n - r + 1) \> k\\.
 [`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
 applies this condition with \\k = 2\\ to every requested rank and
-refuses a moment that does not exist. A Cauchy parent, `tail = c(1, 1)`,
-has a median of five with a finite variance and extremes without a mean.
+refuses a moment that does not exist. The package cannot check the
+declared indices. The default `tail = c(Inf, Inf)` declares that every
+moment exists, so the indices of a heavy-tailed distribution must be
+given.
 
 **Accuracy requirement.** The log-tails `p(x, log.p = TRUE)` and
 `p(x, lower.tail = FALSE, log.p = TRUE)` must keep relative precision
@@ -97,42 +118,53 @@ honor their arguments at the median and are vectorized, and that `d`
 integrates to \\1/2\\ between the quartiles, where `p` rises by \\1/2\\.
 [`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
 checks that the log-tails and the log-density are finite at the median
-and at the split points of the smallest and the largest requested rank,
+and at the cut points of the smallest and the largest requested rank,
 and that the density of every order statistic it integrates has mass 1.
 None of these certifies accuracy.
 
-**Location limit.** The integrals are taken about the median of the
-standard member, and the integration range is split in units of its
-spread (its interquartile range), so the scale on which the standard
-member is supplied does not matter: the package's tests check a normal
-supplied with standard deviations from \\10^{-3}\\ to \\10^6\\. Its
-location does: a standard member whose own location is large, say
-\\10^8\\ with unit scale, loses the digits of \\x - Q(1/2)\\ in double
-precision and the computation stops with an error. Supply the standard
-member and pass the location to
+**A distribution far from the origin.** The integrals are taken about
+the median of the supplied distribution, in units of its spread (its
+interquartile range divided by that of the standard normal), so the
+scale on which the distribution is supplied does not matter: the
+package's tests check a normal supplied with standard deviations from
+\\10^{-3}\\ to \\10^6\\. Its position does: a distribution whose median
+is large against its spread, say \\10^8\\ with unit spread, loses the
+digits of \\x - Q(1/2)\\ in double precision and the computation stops
+with an error. Such a distribution is supplied near the origin, and the
+shift is passed to
 [`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
-instead, which also keeps
+as `os_shift`, which is applied exactly. This also keeps
 [`os_blue()`](https://zwulab.github.io/orderStatMoments/reference/os_blue.md)
 exact.
 
-**Common parents.** Each function wraps the corresponding `stats`
-function with its shape fixed and passes `lower.tail`, `log.p` and `log`
-by name, as in the examples. The declarations that differ between
-parents are these.
+**A density that is infinite at an endpoint.** When the density is
+infinite at a finite lower endpoint of the support, as for a power or a
+gamma-type density with a shape below 1,
+[`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
+integrates next to that endpoint in the distance from it, raised to a
+power that it estimates from the distribution function. The distance is
+represented without rounding when the endpoint is 0, so such a
+distribution is supplied with its endpoint at 0. An infinite density at
+an upper endpoint has no such treatment for a user's distribution, and
+the order statistics next to it are computed less accurately or refused.
+Supplying the reflected variable, whose singular endpoint is the lower
+one, brings that endpoint under the treatment above.
 
-|  |  |  |
-|----|----|----|
-| Parent | `support` | `tail` |
-| Student \\t\_\nu\\ (`pt`, `dt`, `qt`), symmetric | `c(-Inf, Inf)` | `c(nu, nu)` |
-| gamma (`pgamma`, `dgamma`, `qgamma`) | `c(0, Inf)` | `c(Inf, Inf)` |
-| Weibull (`pweibull`, `dweibull`, `qweibull`) | `c(0, Inf)` | `c(Inf, Inf)` |
-| lognormal (`plnorm`, `dlnorm`, `qlnorm`) | `c(0, Inf)` | `c(Inf, Inf)` |
-| beta (`pbeta`, `dbeta`, `qbeta`) | `c(0, 1)` | `c(Inf, Inf)` |
-
-The lognormal tail decays faster than any power, so every moment exists.
-A distribution declared on `c(-Inf, Inf)` whose density is zero below
-some point stops with an error that its log-tail is not finite, which is
-the sign that `support` is missing.
+**A density that is not smooth inside the support.** The quadrature rule
+assumes an integrand that is smooth inside each piece of the integration
+range. A point where the density has a kink or a jump, such as the
+median of the Laplace distribution, is therefore declared in `breaks`,
+and
+[`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
+then cuts every single integral and both levels of every double integral
+there, so that each piece is smooth. Without the declaration the
+covariances lose accuracy: for the Laplace example below, at \\n = 5\\,
+the sum of the covariance matrix misses its exact value by about
+\\10^{-8}\\, and with `breaks = 0` by less than \\10^{-12}\\. The means
+and the variances are affected less. The error estimate `quad_err` does
+not show the loss, and the residual `sum_B` of the run-time checks,
+which is available for a complete rank set, does. The package cannot
+find such points itself. The built-in families have none.
 
 ## See also
 
@@ -141,57 +173,62 @@ the sign that `support` is missing.
 ## Examples
 
 ``` r
-# Student t with 5 degrees of freedom: tail index 5 in both tails
-t5 <- os_dist(function(q, lower.tail = TRUE, log.p = FALSE)
-                stats::pt(q, df = 5, lower.tail = lower.tail, log.p = log.p),
-              function(x, log = FALSE) stats::dt(x, df = 5, log = log),
-              function(p) stats::qt(p, df = 5),
-              symmetric = TRUE, tail = c(5, 5), name = "t5")
-os_moments(5, dist = t5)
-#> Exact moments of order statistics: t5 (location 0, scale 1), n = 5, ranks 1 2 3 4 5
+# A Pareto distribution with shape 3 on [1, Inf): the upper tail index is 3,
+# so the variance of the maximum exists (3 * 1 > 2)
+pareto <- function(shape) os_dist(
+  p = function(q, lower.tail = TRUE, log.p = FALSE) {
+    ls <- -shape * log(pmax(q, 1))                  # log S(x) = -shape * log(x)
+    if (lower.tail) { if (log.p) log(-expm1(ls)) else -expm1(ls) }
+    else if (log.p) ls else exp(ls)
+  },
+  d = function(x, log = FALSE) {
+    ld <- ifelse(x >= 1, log(shape) - (shape + 1) * log(x), -Inf)
+    if (log) ld else exp(ld)
+  },
+  q = function(p) (1 - p)^(-1 / shape),
+  support = c(1, Inf), tail = c(Inf, shape), name = "pareto")
+os_moments(5, dist = pareto(3), cov = FALSE)
+#> Exact moments of order statistics: pareto, n = 5, ranks 1 2 3 4 5
 #> alpha (means):
-#>            r1            r2            r3            r4            r5 
-#> -1.450975e+00 -5.580065e-01 -8.649563e-18  5.580065e-01  1.450975e+00 
-#> B (covariance matrix):
-#>           r1        r2        r3        r4        r5
-#> r1 1.1478770 0.3802510 0.2288315 0.1665120 0.1398297
-#> r2 0.3802510 0.4270062 0.2648562 0.1959689 0.1665120
-#> r3 0.2288315 0.2648562 0.3501660 0.2648562 0.2288315
-#> r4 0.1665120 0.1959689 0.2648562 0.4270062 0.3802510
-#> r5 0.1398297 0.1665120 0.2288315 0.3802510 1.1478770
-#> route: integrate; quadrature error estimate: 2.17e-10
-#> checks: reflection 1.61e-17; identities sum_alpha 2.94e-17, sum_sq 8.88e-16, sum_B 3.29e-14
+#>       r1       r2       r3       r4       r5 
+#> 1.071429 1.168831 1.314935 1.577922 2.366883 
+#> var (variances; cov = FALSE):
+#>         r1         r2         r3         r4         r5 
+#> 0.00588697 0.01844908 0.05116556 0.18049160 2.40885300 
+#> route: integrate; quadrature error estimate: 3.14e-12
+#> checks: reflection n/a; identities sum_alpha 4.44e-16, sum_sq 7.11e-15
 
-# The Cauchy: the median of five has a variance, the extremes have no mean
-cauchy <- os_dist(stats::pcauchy, stats::dcauchy, stats::qcauchy,
-                  symmetric = TRUE, tail = c(1, 1), name = "cauchy")
-os_moments(5, ranks = 3, dist = cauchy)
-#> Exact moments of order statistics: cauchy (location 0, scale 1), n = 5, ranks 3
-#> alpha (means):
-#>            r3 
-#> -1.285952e-17 
-#> B (covariance matrix):
-#>          r3
-#> r3 1.221253
-#> route: integrate; quadrature error estimate: 3.89e-14
-#> checks: reflection 1.73e-17; identities n/a
+# With shape 1.5 the maximum has no variance, and the request is refused
+try(os_moments(5, ranks = 5, dist = pareto(1.5)))
+#> Error : os_moments(): the moment of order 2 of X_(5) does not exist: the upper tail index 1.5 times n - r + 1 = 1 is not above 2
+os_moments(5, ranks = 1:4, dist = pareto(1.5), cov = FALSE)$var
+#>         r1         r2         r3         r4 
+#> 0.03227542 0.12829478 0.51263572 3.91479400 
 
-# A gamma with shape 2: a semi-bounded support, every moment finite
-gamma2 <- os_dist(function(q, lower.tail = TRUE, log.p = FALSE)
-                    stats::pgamma(q, shape = 2, lower.tail = lower.tail, log.p = log.p),
-                  function(x, log = FALSE) stats::dgamma(x, shape = 2, log = log),
-                  function(p) stats::qgamma(p, shape = 2),
-                  support = c(0, Inf), name = "gamma2")
-os_moments(10, ranks = c(1, 5, 10), dist = gamma2, scale = 3)
-#> Exact moments of order statistics: gamma2 (location 0, scale 3), n = 10, ranks 1 5 10
+# The Laplace (double exponential) distribution, symmetric about 0, where its
+# density is not smooth
+laplace <- os_dist(
+  p = function(q, lower.tail = TRUE, log.p = FALSE) {
+    s <- if (lower.tail) q else -q                  # F(x) = S(-x) by symmetry
+    lp <- ifelse(s <= 0, log(0.5) + s, log1p(-0.5 * exp(-abs(s))))
+    if (log.p) lp else exp(lp)
+  },
+  d = function(x, log = FALSE) if (log) log(0.5) - abs(x) else 0.5 * exp(-abs(x)),
+  q = function(p) ifelse(p <= 0.5, log(2 * p), -log(2 * (1 - p))),
+  symmetric = TRUE, name = "laplace",
+  breaks = 0)                                       # the density has a kink at 0
+os_moments(5, dist = laplace, os_shift = 10, os_multiplier = 2)
+#> Exact moments of order statistics: laplace, os_shift = 10, os_multiplier = 2, n = 5, ranks 1 2 3 4 5
 #> alpha (means):
-#>        r1        r5       r10 
-#>  1.398065  4.725263 13.868870 
+#>        r1        r2        r3        r4        r5 
+#>  6.822917  8.854167 10.000000 11.145830 13.177080 
 #> B (covariance matrix):
-#>            r1        r5        r10
-#> r1  0.6842539 0.3962219  0.2986211
-#> r5  0.3962219 2.0064850  1.5292810
-#> r10 0.2986211 1.5292810 20.0825000
-#> route: integrate; quadrature error estimate: 1.11e-10
-#> checks: reflection n/a; identities n/a
+#>           r1       r2       r3       r4        r5
+#> r1 5.8810030 1.930286 1.056111 0.797908 0.7388585
+#> r2 1.9302860 2.009844 1.120694 0.857934 0.7979080
+#> r3 1.0561110 1.120694 1.404722 1.120694 1.0561110
+#> r4 0.7979080 0.857934 1.120694 2.009844 1.9302860
+#> r5 0.7388585 0.797908 1.056111 1.930286 5.8810030
+#> route: integrate; quadrature error estimate: 4.82e-10
+#> checks: reflection 4.44e-16; identities sum_alpha 2.45e-16, sum_sq 3.55e-15, sum_B 3.55e-15
 ```

@@ -21,7 +21,7 @@ variance among linear unbiased estimators from these ranks."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">orderStatMoments</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,7 @@ variance among linear unbiased estimators from these ranks."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Lloyd's best linear unbiased estimators of location and scale</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ZWuLab/orderStatMoments/blob/v0.2.0/R/os_linear.R" class="external-link"><code>R/os_linear.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ZWuLab/orderStatMoments/blob/main/R/os_linear.R" class="external-link"><code>R/os_linear.R</code></a></small>
       <div class="d-none name"><code>os_blue.Rd</code></div>
     </div>
 
@@ -72,18 +72,24 @@ variance among linear unbiased estimators from these ranks.</p>
 <dl><dt id="arg-mom">mom<a class="anchor" aria-label="anchor" href="#arg-mom"></a></dt>
 <dd><p>An object of class <code>"orderStatMoments"</code> computed with
 <code>cov = TRUE</code> at two or more ranks. The weights are computed from
-its <code>standard</code> component, the moments of the standard member, so
-they do not depend on the <code>location</code> and <code>scale</code> it was
-computed with.</p></dd>
+its <code>standard</code> component, the moments of the standard member of
+the family (the member with the shape parameters of the call and no shift
+or multiplier), so they do not depend on the other parameters of the
+family or on the <code>os_shift</code> and <code>os_multiplier</code> it was computed
+with.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list with <code>w_location</code> and <code>w_scale</code> (the weight vectors,
-  named by rank), <code>var_location</code>, <code>var_scale</code> and <code>cov</code> (the
-  variances and the covariance of the two estimators per unit of the squared
-  scale parameter, so that \(\mathrm{Var}(\hat\mu) = \sigma^2 \cdot\)
-  <code>var_location</code>), <code>ranks</code>, <code>n</code> and <code>dist</code>.</p>
+    <p>A list with <code>w_mu</code> and <code>w_sigma</code> (the weight vectors of
+  \(\hat\mu\) and \(\hat\sigma\), named by rank), <code>var_mu</code>,
+  <code>var_sigma</code> and <code>cov</code> (the variances and the covariance of the two
+  estimators per unit of the squared scale parameter, so that
+  \(\mathrm{Var}(\hat\mu) = \sigma^2 \cdot\) <code>var_mu</code>), <code>ranks</code>,
+  <code>n</code> and <code>dist</code>. The names say which parameter of the location-scale
+  family each output belongs to, \(\mu\) or \(\sigma\). These are the unknown
+  parameters that are estimated, as distinct from the known constants
+  <code>os_shift</code> and <code>os_multiplier</code> of <code><a href="os_moments.html">os_moments()</a></code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -105,14 +111,19 @@ itself loses its digits. It then checks the four unbiasedness conditions,
 \(\bm w_\mu'\mathbf 1 = 1\), \(\bm w_\mu'\bm\alpha = 0\),
 \(\bm w_\sigma'\mathbf 1 = 0\) and \(\bm w_\sigma'\bm\alpha = 1\), and
 warns when one fails by more than \(10^{-6}\).</p>
-<p><strong>Conditions.</strong> The distribution of <code>mom</code> is treated as the
-standard member of a location-scale family, which every <code><a href="os_dist.html">os_dist()</a></code>
-object is by construction; the required moments exist, which
-<code><a href="os_moments.html">os_moments()</a></code> has checked; at least two distinct ranks are present, so
-that the design \([\mathbf 1, \bm\alpha]\) has rank two; and \(\bm B\) is
-positive definite. The scale estimated is the family's scale parameter: the
-standard deviation for the normal, the scale of the logistic or Gumbel, and
-the length of the support for the uniform.</p>
+<p><strong>Conditions.</strong> The standard member of <code>mom</code> is taken as the
+\(Z\) of the location-scale family \(\mu + \sigma Z\). For a built-in
+family it is the member with the shape parameters of the call (the degrees
+of freedom of a \(t\), the shape of a gamma or a Weibull, the
+<code>sdlog</code> of a lognormal), and for a user's distribution it is the
+distribution that <code><a href="os_dist.html">os_dist()</a></code> was given. The required moments exist,
+which <code><a href="os_moments.html">os_moments()</a></code> has checked; at least two distinct ranks are
+present, so that the design \([\mathbf 1, \bm\alpha]\) has rank two; and
+\(\bm B\) is positive definite. The \(\sigma\) that is estimated is the
+multiplier of the standard member: the standard deviation for the normal,
+the scale of the logistic, the Gumbel, the gamma or the Weibull, the length
+of the support for the uniform, and \(\exp(\mathrm{meanlog})\) for the
+lognormal, with \(\mu\) a shift (a threshold) of the family.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -128,10 +139,10 @@ parameters using order statistics. <em>Biometrika</em>, 39(1-2), 88-95.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">9</span>, ranks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">5</span>, <span class="fl">7</span>, <span class="fl">9</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu">os_blue</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">b</span><span class="op">$</span><span class="va">w_location</span>                     <span class="co"># sums to one</span></span></span>
+<span class="r-in"><span><span class="va">b</span><span class="op">$</span><span class="va">w_mu</span>                           <span class="co"># sums to one</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        r1        r3        r5        r7        r9 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.1457682 0.2382168 0.2320301 0.2382168 0.1457682 </span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">var_location</span><span class="op">)</span>             <span class="co"># SD of the location estimate per unit sigma</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">var_mu</span><span class="op">)</span>                   <span class="co"># SD of the location estimate per unit sigma</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3375654</span>
 </code></pre></div>
     </div>

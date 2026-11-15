@@ -19,7 +19,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">orderStatMoments</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@
       <h1>Exact moments of order statistics with orderStatMoments</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/ZWuLab/orderStatMoments/blob/v0.2.0/vignettes/orderStatMoments.Rmd" class="external-link"><code>vignettes/orderStatMoments.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ZWuLab/orderStatMoments/blob/main/vignettes/orderStatMoments.Rmd" class="external-link"><code>vignettes/orderStatMoments.Rmd</code></a></small>
       <div class="d-none name"><code>orderStatMoments.Rmd</code></div>
     </div>
 
@@ -80,23 +80,28 @@ single order statistics, or approximates the covariances.</p>
 <p>The <code>orderStatMoments</code> package computes these moments
 exactly, for any ranks and any sample size, by numerical integration of
 their defining integrals, or by closed-form expressions where the
-distribution has them. It covers the normal, uniform, exponential,
-logistic and Gumbel distributions, and any continuous distribution the
-user supplies through its distribution, density and quantile functions.
-Building on the moments, three more functions are provided.
-<code><a href="../reference/os_quantile_weights.html">os_quantile_weights()</a></code> gives the weights of a sample
-quantile under any of the nine definitions of R’s
-<code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile()</a></code>. <code><a href="../reference/os_lin_moments.html">os_lin_moments()</a></code> gives the means
-and covariances of any linear combinations of order statistics.
+distribution has them. Thirteen families are built in and are given as
+in R, by name and with R’s own parameters: the normal, uniform,
+exponential, logistic, Gumbel, Student
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
+Cauchy, gamma, chi-square, beta, lognormal, Weibull and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
+distributions. Any other continuous distribution enters through its
+distribution, density and quantile functions. Building on the moments,
+three more functions are provided. <code><a href="../reference/os_quantile_weights.html">os_quantile_weights()</a></code>
+gives the weights of a sample quantile under any of the nine definitions
+of R’s <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile()</a></code>. <code><a href="../reference/os_lin_moments.html">os_lin_moments()</a></code> gives the
+means and covariances of any linear combinations of order statistics.
 <code><a href="../reference/os_blue.html">os_blue()</a></code> gives the best linear unbiased estimators (BLUE)
 of location and scale of Lloyd (1952).</p>
 <p>The package has two requirements. The distribution must be
 continuous, and a moment is computed only if it exists, which the
 package checks rank by rank from the tail behavior of the distribution
-(the <code>tail</code> argument of <code><a href="../reference/os_dist.html">os_dist()</a></code>). Here “exact”
-means the finite-sample integral evaluated numerically, as opposed to a
-large-sample or series approximation. The integrator is asked for a
-relative tolerance of
+(set by the package for a built-in family, and declared in the
+<code>tail</code> argument of <code><a href="../reference/os_dist.html">os_dist()</a></code> for a user’s
+distribution). Here “exact” means the finite-sample integral evaluated
+numerically, as opposed to a large-sample or series approximation. The
+integrator is asked for a relative tolerance of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>11</mn></mrow></msup><annotation encoding="application/x-tex">10^{-11}</annotation></semantics></math>
 on a single integral and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>9</mn></mrow></msup><annotation encoding="application/x-tex">10^{-9}</annotation></semantics></math>
@@ -140,11 +145,11 @@ and compare the package with other software.</p>
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span></span>
 <span>  n <span class="op">=</span> <span class="fl">20</span>,                   <span class="co"># the sample size</span></span>
 <span>  ranks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span>,  <span class="co"># the order statistics to compute (default: all)</span></span>
-<span>  dist <span class="op">=</span> <span class="st">"norm"</span>             <span class="co"># "norm", "unif", "exp", "logis" or "gumbel",</span></span>
+<span>  dist <span class="op">=</span> <span class="st">"norm"</span>             <span class="co"># the name of a built-in family, as in R,</span></span>
 <span>                            <span class="co"># or a distribution built with os_dist()</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">m</span></span>
-<span><span class="co">#&gt; Exact moments of order statistics: norm (location 0, scale 1), n = 20, ranks 1 5 10 20</span></span>
+<span><span class="co">#&gt; Exact moments of order statistics: norm (mean = 0, sd = 1), n = 20, ranks 1 5 10 20</span></span>
 <span><span class="co">#&gt; alpha (means):</span></span>
 <span><span class="co">#&gt;          r1          r5         r10         r20 </span></span>
 <span><span class="co">#&gt; -1.86747500 -0.74538300 -0.06199629  1.86747500 </span></span>
@@ -169,12 +174,13 @@ whenever it contains
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math>,
 such as 1, 5, 16 and 20 at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">n = 20</annotation></semantics></math>.</p>
-<p>Use the family name when the distribution is one of the five. For
-another distribution, build it once with <code><a href="../reference/os_dist.html">os_dist()</a></code> (see “A
-user-supplied distribution”). For the means and the variances at many
-ranks without the covariances, pass <code>cov = FALSE</code>, which
-skips the double integrals. The help page <code><a href="../reference/os_moments.html">?os_moments</a></code> lists
-every argument.</p>
+<p>Use the family name when the distribution is one of the thirteen,
+with its parameters under R’s own names (see “Installation and the
+families”). For another distribution, build it once with
+<code><a href="../reference/os_dist.html">os_dist()</a></code> (see “A user-supplied distribution”). For the
+means and the variances at many ranks without the covariances, pass
+<code>cov = FALSE</code>, which skips the double integrals. The help
+page <code><a href="../reference/os_moments.html">?os_moments</a></code> lists every argument.</p>
 </div>
 <div class="section level2">
 <h2 id="computing-cost">Computing cost<a class="anchor" aria-label="anchor" href="#computing-cost"></a>
@@ -194,9 +200,9 @@ milliseconds, on the machine that built this vignette.</p>
 <span>               with_three_covariances <span class="op">=</span> <span class="va">t_pairs</span>,</span>
 <span>               full_matrix_n10 <span class="op">=</span> <span class="va">t_full10</span>, full_matrix_n20 <span class="op">=</span> <span class="va">t_full20</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; three_means_and_variances    with_three_covariances           full_matrix_n10 </span></span>
-<span><span class="co">#&gt;                         4                       388                      2004 </span></span>
+<span><span class="co">#&gt;                         4                       442                      2255 </span></span>
 <span><span class="co">#&gt;           full_matrix_n20 </span></span>
-<span><span class="co">#&gt;                      8315</span></span></code></pre></div>
+<span><span class="co">#&gt;                      9585</span></span></code></pre></div>
 <p>The computing cost of one integral hardly depends on
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.
 On an Apple M3 Pro, for the standard normal and
@@ -221,7 +227,7 @@ By that count, the full matrix at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">n = 100</annotation></semantics></math>
 costs about 26 times the one at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>20</mn></mrow><annotation encoding="application/x-tex">n = 20</annotation></semantics></math>
-above. On the machine that built this vignette, that predicts about 216
+above. On the machine that built this vignette, that predicts about 249
 seconds. On the M3 Pro, the full normal matrix took 2.4 minutes at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">n = 100</annotation></semantics></math>
 on one core, and 70 minutes at
@@ -236,86 +242,135 @@ matrix of its pair.</p>
 <div class="section level2">
 <h2 id="installation-and-the-families">Installation and the families<a class="anchor" aria-label="anchor" href="#installation-and-the-families"></a>
 </h2>
-<p>This section says how to install the package and what the five
-built-in families are. Install it from GitHub, with the vignette:</p>
+<p>This section says how to install the package and how a built-in
+family is given. Install it from GitHub, with the vignette:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ZWuLab/orderStatMoments"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>To cite the package in a publication, use
 <code>citation("orderStatMoments")</code>, which gives the paper of Wu
 and Tong (2026).</p>
-<p>The package imports nothing beyond base R and <code>stats</code>. It
-computes the moments of each family’s standard member
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>,
-the member with location 0 and scale 1, then shifts and scales them by
-the <code>location</code> and <code>scale</code> arguments of
-<code><a href="../reference/os_moments.html">os_moments()</a></code>, so
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>=</mo><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi></mrow><mo>+</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi></mrow><mo>⋅</mo><mi>Z</mi></mrow><annotation encoding="application/x-tex">X = \mathrm{location} + \mathrm{scale} \cdot Z</annotation></semantics></math>.
-The means (<code>alpha</code>) become
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi></mrow><mo>+</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi></mrow><mo>⋅</mo><mi>E</mi><mo stretchy="false" form="prefix">[</mo><msub><mi>Z</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\mathrm{location} + \mathrm{scale} \cdot E[Z_{(r)}]</annotation></semantics></math>,
-and the covariance matrix (<code>B</code>) is multiplied by
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">e</mi></mrow><mn>2</mn></msup><annotation encoding="application/x-tex">\mathrm{scale}^2</annotation></semantics></math>.</p>
+<p>The package imports nothing beyond base R and <code>stats</code>. A
+built-in family is given as in R: <code>dist</code> is the name that R’s
+functions carry after <code>p</code>, <code>d</code> and <code>q</code>
+(<code>"gamma"</code> for <code><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">pgamma()</a></code>), and its parameters are
+passed by R’s own names, with R’s defaults. A user who can write
+<code>rgamma(n, shape = 2, rate = 3)</code> already knows the call. The
+families are the twelve continuous distributions for which base R
+provides the <code>p</code>, <code>d</code> and <code>q</code>
+functions, and the Gumbel, which R does not provide.</p>
 <table class="table">
 <colgroup>
-<col width="25%">
-<col width="25%">
-<col width="25%">
-<col width="25%">
+<col width="33%">
+<col width="33%">
+<col width="33%">
 </colgroup>
 <thead><tr class="header">
 <th><code>dist</code></th>
-<th>Standard member
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
-</th>
-<th>What <code>location</code> and <code>scale</code> mean</th>
+<th>Parameters, with R’s defaults</th>
 <th>Closed forms returned by default</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td><code>"norm"</code></td>
-<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">N(0, 1)</annotation></semantics></math></td>
-<td>the mean and the standard deviation</td>
+<td>
+<code>mean = 0</code>, <code>sd = 1</code>
+</td>
 <td>none; all moments by quadrature</td>
 </tr>
 <tr class="even">
 <td><code>"unif"</code></td>
-<td>uniform on
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[0, 1]</annotation></semantics></math>
+<td>
+<code>min = 0</code>, <code>max = 1</code>
 </td>
-<td>the lower end and the length of the support</td>
 <td>every mean, variance and covariance</td>
 </tr>
 <tr class="odd">
 <td><code>"exp"</code></td>
-<td>exponential with rate 1</td>
-<td>the lower end of the support, and the mean
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">e</mi></mrow></mrow><annotation encoding="application/x-tex">1/\mathrm{rate}</annotation></semantics></math>
-</td>
+<td><code>rate = 1</code></td>
 <td>every mean, variance and covariance</td>
 </tr>
 <tr class="even">
 <td><code>"logis"</code></td>
-<td>standard logistic</td>
-<td>the location and scale parameters</td>
+<td>
+<code>location = 0</code>, <code>scale = 1</code>
+</td>
 <td>the means and the variances</td>
 </tr>
 <tr class="odd">
 <td><code>"gumbel"</code></td>
-<td>Gumbel, maximum form,
+<td>
+<code>location = 0</code>, <code>scale = 1</code> (maximum form,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>−</mi><msup><mi>e</mi><mrow><mi>−</mi><mi>x</mi></mrow></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">F(x) = \exp(-e^{-x})</annotation></semantics></math>
-</td>
-<td>the location and scale parameters</td>
+at the defaults)</td>
 <td>the mean and variance of the maximum</td>
+</tr>
+<tr class="even">
+<td><code>"t"</code></td>
+<td><code>df</code></td>
+<td>none</td>
+</tr>
+<tr class="odd">
+<td><code>"cauchy"</code></td>
+<td>
+<code>location = 0</code>, <code>scale = 1</code>
+</td>
+<td>none</td>
+</tr>
+<tr class="even">
+<td><code>"gamma"</code></td>
+<td>
+<code>shape</code>, and <code>rate = 1</code> or
+<code>scale</code>
+</td>
+<td>none</td>
+</tr>
+<tr class="odd">
+<td><code>"chisq"</code></td>
+<td><code>df</code></td>
+<td>none</td>
+</tr>
+<tr class="even">
+<td><code>"beta"</code></td>
+<td>
+<code>shape1</code>, <code>shape2</code>
+</td>
+<td>none</td>
+</tr>
+<tr class="odd">
+<td><code>"lnorm"</code></td>
+<td>
+<code>meanlog = 0</code>, <code>sdlog = 1</code>
+</td>
+<td>none</td>
+</tr>
+<tr class="even">
+<td><code>"weibull"</code></td>
+<td>
+<code>shape</code>, <code>scale = 1</code>
+</td>
+<td>none</td>
+</tr>
+<tr class="odd">
+<td><code>"f"</code></td>
+<td>
+<code>df1</code>, <code>df2</code>
+</td>
+<td>none</td>
 </tr>
 </tbody>
 </table>
+<p>A parameter without a default must be given, and the noncentral
+versions (R’s <code>ncp</code>) are not built in. Every argument of
+<code><a href="../reference/os_moments.html">os_moments()</a></code> after <code>dist</code> is given by its full
+name.</p>
 <p>By default the package uses a closed form wherever the family has
 one. For 20 exponential waiting times with mean 2, the means of the
 minimum, the tenth order statistic and the maximum come from closed
 forms:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># the order statistics of 20 exponential waiting times with mean 2 (rate 1/2)</span></span>
-<span><span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">20</span>, ranks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span>, dist <span class="op">=</span> <span class="st">"exp"</span>, scale <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">e</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">20</span>, ranks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span>, dist <span class="op">=</span> <span class="st">"exp"</span>, rate <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">e</span><span class="op">$</span><span class="va">alpha</span></span>
 <span><span class="co">#&gt;       r1      r10      r20 </span></span>
 <span><span class="co">#&gt; 0.100000 1.337543 7.195479</span></span>
@@ -328,6 +383,94 @@ the family has closed forms for some of the requested quantities and not
 for others. <code>method = "integrate"</code> forces the quadrature
 everywhere, which is how the package’s tests check the quadrature
 against the closed forms.</p>
+</div>
+<div class="section level2">
+<h2 id="the-parameters-of-a-family-a-shift-and-a-multiplier">The parameters of a family, a shift and a multiplier<a class="anchor" aria-label="anchor" href="#the-parameters-of-a-family-a-shift-and-a-multiplier"></a>
+</h2>
+<p>This section shows the parameters at work and the two arguments that
+apply to every distribution. The order statistics of ten gamma
+observations with shape 2 and rate 3, and of ten lognormal observations,
+are requested as the random numbers would be:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">10</span>, ranks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">10</span><span class="op">)</span>, dist <span class="op">=</span> <span class="st">"gamma"</span>, shape <span class="op">=</span> <span class="fl">2</span>, rate <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">g</span><span class="op">$</span><span class="va">alpha</span></span>
+<span><span class="co">#&gt;        r1        r5       r10 </span></span>
+<span><span class="co">#&gt; 0.1553405 0.5250292 1.5409857</span></span>
+<span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">10</span>, ranks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">10</span><span class="op">)</span>, dist <span class="op">=</span> <span class="st">"lnorm"</span>, meanlog <span class="op">=</span> <span class="fl">1</span>, sdlog <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>           cov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">alpha</span></span>
+<span><span class="co">#&gt;       r1       r5      r10 </span></span>
+<span><span class="co">#&gt; 1.312638 2.605240 6.136485</span></span></code></pre></div>
+<p>The package computes the moments of the standard member of each
+family, the member with the shape parameters of the call and R’s
+defaults elsewhere, and applies the other parameters afterwards,
+exactly. The mean and the standard deviation of the normal, the ends of
+the uniform, the rate of the exponential, the rate or the scale of the
+gamma, the scale of the Weibull and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">g</mi></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\exp(\mathrm{meanlog})</annotation></semantics></math>
+of the lognormal are a shift and a multiplier of the standard member. So
+a distribution with a large mean or a small rate loses no digits, and
+the user does not have to know which parameter does what.</p>
+<p>Two arguments apply to every distribution. <code>os_shift</code>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">= a</annotation></semantics></math>
+and <code>os_multiplier</code>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mi>b</mi><mo>&gt;</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">= b &gt; 0</annotation></semantics></math>
+give the moments of the order statistics of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Y</mi><mo>=</mo><mi>a</mi><mo>+</mo><mi>b</mi><mi>X</mi></mrow><annotation encoding="application/x-tex">Y = a + bX</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+has the distribution of the call: the means become
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>+</mo><mi>b</mi><mspace width="0.167em"></mspace><mi>E</mi><mo stretchy="false" form="prefix">[</mo><msub><mi>X</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">a + b\,E[X_{(r)}]</annotation></semantics></math>
+and the covariance matrix is multiplied by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>b</mi><mn>2</mn></msup><annotation encoding="application/x-tex">b^2</annotation></semantics></math>.
+They serve where a distribution has no parameter of its own for a shift
+or a multiplier, such as a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+distribution with a location and a scale, a shifted exponential, or a
+three-parameter Weibull:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># five observations from 3 + 2 T, with T a t variable with 5 degrees of freedom</span></span>
+<span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">5</span>, dist <span class="op">=</span> <span class="st">"t"</span>, df <span class="op">=</span> <span class="fl">5</span>, os_shift <span class="op">=</span> <span class="fl">3</span>, os_multiplier <span class="op">=</span> <span class="fl">2</span>, cov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Exact moments of order statistics: t (df = 5), os_shift = 3, os_multiplier = 2, n = 5, ranks 1 2 3 4 5</span></span>
+<span><span class="co">#&gt; alpha (means):</span></span>
+<span><span class="co">#&gt;         r1         r2         r3         r4         r5 </span></span>
+<span><span class="co">#&gt; 0.09804974 1.88398700 3.00000000 4.11601300 5.90195000 </span></span>
+<span><span class="co">#&gt; var (variances; cov = FALSE):</span></span>
+<span><span class="co">#&gt;       r1       r2       r3       r4       r5 </span></span>
+<span><span class="co">#&gt; 4.591509 1.708025 1.400664 1.708025 4.591509 </span></span>
+<span><span class="co">#&gt; route: integrate; quadrature error estimate: 3.89e-12</span></span>
+<span><span class="co">#&gt; checks: reflection 1.61e-17; identities sum_alpha 2.94e-17, sum_sq 8.88e-16</span></span></code></pre></div>
+<p>The package also sets the tail behavior of each family, which decides
+the moments that exist (“A user-supplied distribution” states the rule).
+The Cauchy distribution has no mean, but the median of five Cauchy
+observations has a variance. The ranks 1, 2, 4 and 5 have no second
+moment, and <code><a href="../reference/os_moments.html">os_moments()</a></code> stops at the first such rank:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">5</span>, ranks <span class="op">=</span> <span class="fl">3</span>, dist <span class="op">=</span> <span class="st">"cauchy"</span><span class="op">)</span><span class="op">$</span><span class="va">var</span></span>
+<span><span class="co">#&gt;       r3 </span></span>
+<span><span class="co">#&gt; 1.221253</span></span>
+<span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">5</span>, dist <span class="op">=</span> <span class="st">"cauchy"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> os_moments(): the moment of order 2 of X_(1) does not exist: the lower tail index 1 times the rank 1 is not above 2</span></span></code></pre></div>
+<p>A gamma, a chi-square, a Weibull, a beta or an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
+distribution with a shape below 1 has a density that is infinite at an
+endpoint of its support. The package integrates next to such an endpoint
+in a variable in which the integrand is bounded (Appendix A), so these
+families take the same call, including the extremes at the sample sizes
+tested (Appendix B):</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># the minimum and the maximum of 1001 observations from the arcsine law, beta(1/2, 1/2)</span></span>
+<span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">1001</span>, ranks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1001</span><span class="op">)</span>, dist <span class="op">=</span> <span class="st">"beta"</span>, shape1 <span class="op">=</span> <span class="fl">0.5</span>, shape2 <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>           cov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Exact moments of order statistics: beta (shape1 = 0.5, shape2 = 0.5), n = 1001, ranks 1 1001</span></span>
+<span><span class="co">#&gt; alpha (means):</span></span>
+<span><span class="co">#&gt;           r1        r1001 </span></span>
+<span><span class="co">#&gt; 4.910174e-06 9.999951e-01 </span></span>
+<span><span class="co">#&gt; var (variances; cov = FALSE):</span></span>
+<span><span class="co">#&gt;           r1        r1001 </span></span>
+<span><span class="co">#&gt; 1.199694e-10 1.199694e-10 </span></span>
+<span><span class="co">#&gt; route: integrate; quadrature error estimate: 7.14e-17</span></span>
+<span><span class="co">#&gt; checks: reflection 8.88e-16; identities n/a</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="what-the-result-holds">What the result holds<a class="anchor" aria-label="anchor" href="#what-the-result-holds"></a>
@@ -377,10 +520,18 @@ covariances</td>
 <tr class="even">
 <td><code>standard</code></td>
 <td>a list with the <code>alpha</code>, <code>var</code> and
-<code>B</code> of the standard member, before <code>location</code> and
-<code>scale</code> are applied, which <code><a href="../reference/os_blue.html">os_blue()</a></code> reads</td>
+<code>B</code> of the standard member of the family, which
+<code><a href="../reference/os_blue.html">os_blue()</a></code> reads</td>
 </tr>
 <tr class="odd">
+<td>
+<code>par</code>, <code>os_shift</code>,
+<code>os_multiplier</code>
+</td>
+<td>the parameters of the built-in family (<code>NULL</code> for a
+user’s distribution) and the two constants of the call</td>
+</tr>
+<tr class="even">
 <td><code>checks</code></td>
 <td>the residuals of the run-time checks (Appendix B), <code>NA</code>
 where a check did not apply</td>
@@ -407,48 +558,51 @@ rank sets, which test sums of moments rather than each moment.</p>
 <h2 id="a-user-supplied-distribution">A user-supplied distribution<a class="anchor" aria-label="anchor" href="#a-user-supplied-distribution"></a>
 </h2>
 <p>This section shows how to supply a distribution that is not built in,
-and the four points that matter for such a distribution.
+and the five points that matter for such a distribution.
 <code><a href="../reference/os_dist.html">os_dist()</a></code> builds the object that <code>dist</code> accepts,
-from the three functions of a distribution in R’s convention. Here is
-Student’s
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
-with 5 degrees of freedom:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">t5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/os_dist.html">os_dist</a></span><span class="op">(</span></span>
-<span>  p <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">q</span>, <span class="va">lower.tail</span> <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">log.p</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">pt</a></span><span class="op">(</span><span class="va">q</span>, df <span class="op">=</span> <span class="fl">5</span>, lower.tail <span class="op">=</span> <span class="va">lower.tail</span>, log.p <span class="op">=</span> <span class="va">log.p</span><span class="op">)</span>,</span>
-<span>  d <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">log</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">dt</a></span><span class="op">(</span><span class="va">x</span>, df <span class="op">=</span> <span class="fl">5</span>, log <span class="op">=</span> <span class="va">log</span><span class="op">)</span>,</span>
-<span>  q <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">qt</a></span><span class="op">(</span><span class="va">p</span>, df <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
-<span>  symmetric <span class="op">=</span> <span class="cn">TRUE</span>,     <span class="co"># the density is symmetric about its median</span></span>
-<span>  tail <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span>,       <span class="co"># the density decays like |x|^(-5-1) in both tails</span></span>
-<span>  name <span class="op">=</span> <span class="st">"t5"</span></span>
+from the three functions of a distribution in R’s convention, with the
+parameters fixed inside them. Here is a Pareto distribution with shape 3
+on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mo>,</mo><mi>∞</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[1, \infty)</annotation></semantics></math>,
+whose survival function is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mrow><mi>−</mi><mn>3</mn></mrow></msup><annotation encoding="application/x-tex">x^{-3}</annotation></semantics></math>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pareto</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">shape</span><span class="op">)</span> <span class="fu"><a href="../reference/os_dist.html">os_dist</a></span><span class="op">(</span></span>
+<span>  p <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">q</span>, <span class="va">lower.tail</span> <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">log.p</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">ls</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="va">shape</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="va">q</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>          <span class="co"># log S(x) = -shape * log(x)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">lower.tail</span><span class="op">)</span> <span class="op">{</span> <span class="kw">if</span> <span class="op">(</span><span class="va">log.p</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">expm1</a></span><span class="op">(</span><span class="va">ls</span><span class="op">)</span><span class="op">)</span> <span class="kw">else</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">expm1</a></span><span class="op">(</span><span class="va">ls</span><span class="op">)</span> <span class="op">}</span></span>
+<span>    <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">log.p</span><span class="op">)</span> <span class="va">ls</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">ls</span><span class="op">)</span></span>
+<span>  <span class="op">}</span>,</span>
+<span>  d <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">log</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">ld</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&gt;=</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">shape</span><span class="op">)</span> <span class="op">-</span> <span class="op">(</span><span class="va">shape</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="op">-</span><span class="cn">Inf</span><span class="op">)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">log</span><span class="op">)</span> <span class="va">ld</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">ld</span><span class="op">)</span></span>
+<span>  <span class="op">}</span>,</span>
+<span>  q <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">p</span><span class="op">)</span><span class="op">^</span><span class="op">(</span><span class="op">-</span><span class="fl">1</span> <span class="op">/</span> <span class="va">shape</span><span class="op">)</span>,</span>
+<span>  support <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="cn">Inf</span><span class="op">)</span>,      <span class="co"># the endpoints of the support</span></span>
+<span>  tail <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">Inf</span>, <span class="va">shape</span><span class="op">)</span>,     <span class="co"># bounded below; the density decays like x^(-shape-1) above</span></span>
+<span>  name <span class="op">=</span> <span class="st">"pareto"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">5</span>, dist <span class="op">=</span> <span class="va">t5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Exact moments of order statistics: t5 (location 0, scale 1), n = 5, ranks 1 2 3 4 5</span></span>
+<span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">5</span>, dist <span class="op">=</span> <span class="fu">pareto</span><span class="op">(</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Exact moments of order statistics: pareto, n = 5, ranks 1 2 3 4 5</span></span>
 <span><span class="co">#&gt; alpha (means):</span></span>
-<span><span class="co">#&gt;            r1            r2            r3            r4            r5 </span></span>
-<span><span class="co">#&gt; -1.450975e+00 -5.580065e-01 -8.649563e-18  5.580065e-01  1.450975e+00 </span></span>
+<span><span class="co">#&gt;       r1       r2       r3       r4       r5 </span></span>
+<span><span class="co">#&gt; 1.071429 1.168831 1.314935 1.577922 2.366883 </span></span>
 <span><span class="co">#&gt; B (covariance matrix):</span></span>
-<span><span class="co">#&gt;           r1        r2        r3        r4        r5</span></span>
-<span><span class="co">#&gt; r1 1.1478770 0.3802510 0.2288315 0.1665120 0.1398297</span></span>
-<span><span class="co">#&gt; r2 0.3802510 0.4270062 0.2648562 0.1959689 0.1665120</span></span>
-<span><span class="co">#&gt; r3 0.2288315 0.2648562 0.3501660 0.2648562 0.2288315</span></span>
-<span><span class="co">#&gt; r4 0.1665120 0.1959689 0.2648562 0.4270062 0.3802510</span></span>
-<span><span class="co">#&gt; r5 0.1398297 0.1665120 0.2288315 0.3802510 1.1478770</span></span>
-<span><span class="co">#&gt; route: integrate; quadrature error estimate: 2.17e-10</span></span>
-<span><span class="co">#&gt; checks: reflection 1.61e-17; identities sum_alpha 2.94e-17, sum_sq 8.88e-16, sum_B 3.29e-14</span></span></code></pre></div>
-<p>The mean of the middle order statistic prints as a tiny number rather
-than 0. It is zero up to rounding, as it must be for a symmetric parent.
-Every variance exists here, because
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ν</mi><mi>r</mi><mo>&gt;</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\nu r &gt; 2</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ν</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mi>r</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>&gt;</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\nu (n - r + 1) &gt; 2</annotation></semantics></math>
+<span><span class="co">#&gt;             r1          r2          r3          r4         r5</span></span>
+<span><span class="co">#&gt; r1 0.005886970 0.006422149 0.007224918 0.008669902 0.01300485</span></span>
+<span><span class="co">#&gt; r2 0.006422149 0.018449080 0.020755220 0.024906260 0.03735939</span></span>
+<span><span class="co">#&gt; r3 0.007224918 0.020755220 0.051165560 0.061398670 0.09209800</span></span>
+<span><span class="co">#&gt; r4 0.008669902 0.024906260 0.061398670 0.180491600 0.27073740</span></span>
+<span><span class="co">#&gt; r5 0.013004850 0.037359390 0.092098000 0.270737400 2.40885300</span></span>
+<span><span class="co">#&gt; route: integrate; quadrature error estimate: 9.63e-12</span></span>
+<span><span class="co">#&gt; checks: reflection n/a; identities sum_alpha 4.44e-16, sum_sq 7.11e-15, sum_B 4.69e-11</span></span></code></pre></div>
+<p>Every variance exists here, because
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ν</mi><mi>U</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mi>r</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>&gt;</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\nu_U (n - r + 1) &gt; 2</annotation></semantics></math>
 at every rank when
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ν</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">\nu = 5</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">n = 5</annotation></semantics></math>.
-The <code>checks</code> line gives the residuals of the reflection check
-and of the three permutation identities of Appendix B.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ν</mi><mi>U</mi></msub><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\nu_U = 3</annotation></semantics></math>.
+The <code>checks</code> line gives the residuals of the three
+permutation identities of Appendix B. The reflection check does not
+apply, because the distribution is not symmetric.</p>
 <ol style="list-style-type: decimal">
 <li>
 <strong><code>p</code> must honor <code>log.p</code> and
@@ -462,16 +616,17 @@ from underflowing to zero at large
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.
 A <code>p</code> that ignores these arguments, or that computes
 <code>log(p(x))</code> from a probability that has already underflowed,
-loses the tails. <code><a href="../reference/os_dist.html">os_dist()</a></code> checks that the arguments are
-honored at the median and the lower quartile, and that <code>d</code>
-integrates to one half between the quartiles. <code><a href="../reference/os_moments.html">os_moments()</a></code>
-checks that the log-tails and the log-density are finite at a few points
-around the requested ranks. Neither check certifies accuracy, so prefer
-the <code>p*</code>, <code>d*</code> and <code>q*</code> functions of
-<code>stats</code>, or of a package that implements them with care. A
-distribution whose support has a finite end gives its endpoints in
-<code>support</code>, for example <code>support = c(0, Inf)</code> for a
-gamma, a Weibull or a lognormal.</li>
+loses the tails. The example forms
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\log S(x)</annotation></semantics></math>
+directly and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\log F(x)</annotation></semantics></math>
+through <code><a href="https://rdrr.io/r/base/Log.html" class="external-link">expm1()</a></code>. <code><a href="../reference/os_dist.html">os_dist()</a></code> checks that the
+arguments are honored at the median and the lower quartile, and that
+<code>d</code> integrates to one half between the quartiles.
+<code><a href="../reference/os_moments.html">os_moments()</a></code> checks that the log-tails and the log-density
+are finite at a few points around the requested ranks. Neither check
+certifies accuracy. A distribution whose support has a finite end gives
+its endpoints in <code>support</code>.</li>
 <li>
 <strong>The tail indices decide which moments exist.</strong>
 Suppose the density decays like
@@ -488,66 +643,90 @@ Declare
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>ν</mi><mi>L</mi></msub><mo>,</mo><msub><mi>ν</mi><mi>U</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(\nu_L, \nu_U)</annotation></semantics></math>
 in <code>tail</code>, with <code>Inf</code> for a tail that is bounded
 or decays faster than any power. A rank whose moment does not exist
-stops the computation, with an error that names the rank. The default
+stops the computation, with an error that names the rank. The package
+cannot check the declared indices. The default
 <code>tail = c(Inf, Inf)</code> declares that every moment exists, so
 for a heavy-tailed distribution, omitting <code>tail</code> removes the
 check. A moment that does not exist then usually stops the computation
 with an integration error, but nothing guarantees it. So declare the
-tail indices of a heavy-tailed distribution.</li>
+tail indices of a heavy-tailed distribution. (For the built-in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
+Cauchy and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
+families the package sets them.)</li>
 <li>
-<strong>Supply the standard member.</strong> Pass the location and
-the scale to <code><a href="../reference/os_moments.html">os_moments()</a></code> rather than building them into
-the functions. The integrals are taken about the median of the standard
-member. A standard member with a large location of its own, say
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mn>8</mn></msup><annotation encoding="application/x-tex">10^8</annotation></semantics></math>
-with unit scale, makes
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>−</mo><mi>Q</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mi>/</mi><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">x - Q(1/2)</annotation></semantics></math>
-a difference of two large numbers, which loses precision, and the
-computation stops with an error. The <code>location</code> argument
-itself may be as large as needed: the tests compute the range of two
-uniform observations at <code>location = 1e16</code> exactly. The scale
-of the standard member does not matter, because the integration works in
-units of its spread (Appendix A). The tests check that a normal supplied
-with a standard deviation from 0.001 to
+<strong>Supply the distribution near the origin.</strong> The
+integrals are taken about the median of the supplied distribution, in
+units of its spread (Appendix A), so the scale on which it is supplied
+does not matter. The tests check that a normal supplied with a standard
+deviation from 0.001 to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mn>6</mn></msup><annotation encoding="application/x-tex">10^6</annotation></semantics></math>
 agrees with the scaled standard normal within
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>11</mn></mrow></msup><annotation encoding="application/x-tex">10^{-11}</annotation></semantics></math>
-in relative terms.</li>
+in relative terms. Its position does matter. A distribution whose median
+is large against its spread, say
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mn>8</mn></msup><annotation encoding="application/x-tex">10^8</annotation></semantics></math>
+with unit spread, makes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>−</mo><mi>Q</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mi>/</mi><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">x - Q(1/2)</annotation></semantics></math>
+a difference of two large numbers, which loses precision, and the
+computation stops with an error. Supply such a distribution near the
+origin and pass the shift as <code>os_shift</code>, which may be as
+large as needed: the tests compute the range of two uniform observations
+at <code>os_shift = 1e16</code> exactly.</li>
 <li>
-<strong>Some parents stop with an error rather than return a
-number.</strong> The integration range is split around the peak of each
-order statistic and follows the tails of the parent. The split does not
-follow a second mode. For a mixture of two narrow normals, the mode that
-holds a tenth of the mass fell between the quadrature points. The
+<strong>Some distributions stop with an error rather than return a
+number.</strong> The integration range is cut around the peak of each
+order statistic and follows the tails of the distribution. The cut does
+not follow a second mode. For a mixture of two narrow normals, the mode
+that holds a tenth of the mass fell between the quadrature points. The
 package therefore integrates the density of every order statistic it
 computes by quadrature, and stops, naming the rank, when that mass is
-not 1. It also stops when a piece of the range cannot be resolved. The
-package stops in this way for a tail as heavy as a lognormal with
-<code>sdlog = 3</code> or a Weibull with shape 0.3, whose moments exist
-but whose integrands put their mass far out. It also happens for the
-extremes of a parent whose density is infinite at an endpoint, once they
-concentrate against it: the minimum of a beta(1/2, 1/2) sample is
-computed up to
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">n = 100</annotation></semantics></math>
-and refused from
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1000</mn></mrow><annotation encoding="application/x-tex">n = 1000</annotation></semantics></math>
-on. These checks catch some failures and certify none.</li>
+not 1. It also stops when a piece of the range cannot be resolved. This
+happens for a tail so heavy that the mass of the integrand lies far out,
+as for the covariances of a lognormal with <code>sdlog = 3</code> or of
+a Weibull with shape 0.2, whose moments exist. It also happens for the
+covariance of an extreme order statistic whose variance barely exists,
+such as the minimum of 20 observations from a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+distribution with 2.05 to 2.3 degrees of freedom. For a user’s
+distribution whose density is infinite at an upper endpoint, the order
+statistics next to that endpoint are computed less accurately and are
+refused once they concentrate against it. Supplying the reflected
+variable, whose singular endpoint is the lower one at 0, brings that
+endpoint under the treatment of Appendix A. These checks catch some
+failures and certify none.</li>
+<li>
+<strong>Declare the points where the density is not smooth.</strong>
+The quadrature rule assumes an integrand that is smooth inside each
+piece of the integration range. A density with a kink or a jump inside
+its support, such as the Laplace density at its median or a triangular
+density at its mode, breaks that assumption. Give such points in the
+<code>breaks</code> argument of <code><a href="../reference/os_dist.html">os_dist()</a></code>, and the package
+cuts every integral there. For the Laplace distribution at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">n = 5</annotation></semantics></math>,
+the covariances sum to their exact value 10 within
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>12</mn></mrow></msup><annotation encoding="application/x-tex">10^{-12}</annotation></semantics></math>
+with <code>breaks = 0</code>, and within about
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>8</mn></mrow></msup><annotation encoding="application/x-tex">10^{-8}</annotation></semantics></math>
+without it. The error estimate <code>quad_err</code> does not show that
+loss. A jump that is not declared usually stops the computation with an
+integration error. The package cannot find these points itself, and the
+built-in families have none. The help page of <code><a href="../reference/os_dist.html">os_dist()</a></code> has
+the Laplace example.</li>
 </ol>
-<p>The Cauchy distribution shows the second point. The parent has no
-mean, but the median of five Cauchy observations has a variance. The
-ranks 1, 2, 4 and 5 have no second moment. At rank 2, for example,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ν</mi><mi>L</mi></msub><mi>r</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\nu_L r = 2</annotation></semantics></math>,
-which is not above 2. <code><a href="../reference/os_moments.html">os_moments()</a></code> stops at the first such
-rank:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cauchy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/os_dist.html">os_dist</a></span><span class="op">(</span><span class="va">pcauchy</span>, <span class="va">dcauchy</span>, <span class="va">qcauchy</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                  tail <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"cauchy"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">5</span>, ranks <span class="op">=</span> <span class="fl">3</span>, dist <span class="op">=</span> <span class="va">cauchy</span><span class="op">)</span><span class="op">$</span><span class="va">var</span></span>
-<span><span class="co">#&gt;       r3 </span></span>
-<span><span class="co">#&gt; 1.221253</span></span>
-<span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">5</span>, ranks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, dist <span class="op">=</span> <span class="va">cauchy</span><span class="op">)</span></span>
+<p>A Pareto distribution with shape 1.5 shows the second point. Its
+maximum has no variance, because
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ν</mi><mi>U</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mi>r</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1.5</mn></mrow><annotation encoding="application/x-tex">\nu_U (n - r + 1) = 1.5</annotation></semantics></math>
+at rank
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>,
+which is not above 2, and the other ranks have one:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">5</span>, ranks <span class="op">=</span> <span class="fl">5</span>, dist <span class="op">=</span> <span class="fu">pareto</span><span class="op">(</span><span class="fl">1.5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> os_moments(): the moment of order 2 of X_(1) does not exist: the lower tail index 1 times the rank 1 is not above 2</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> os_moments(): the moment of order 2 of X_(5) does not exist: the upper tail index 1.5 times n - r + 1 = 1 is not above 2</span></span>
+<span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">5</span>, ranks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, dist <span class="op">=</span> <span class="fu">pareto</span><span class="op">(</span><span class="fl">1.5</span><span class="op">)</span>, cov <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">var</span></span>
+<span><span class="co">#&gt;         r1         r2         r3         r4 </span></span>
+<span><span class="co">#&gt; 0.03227542 0.12829478 0.51263572 3.91479400</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="sample-quantiles-linear-combinations-and-the-blue">Sample quantiles, linear combinations and the BLUE<a class="anchor" aria-label="anchor" href="#sample-quantiles-linear-combinations-and-the-blue"></a>
@@ -565,7 +744,7 @@ moments. It returns the means in <code>mean</code>, the variances in
 <code>cov</code>. As a first case, take the median of an even-sized
 sample, which averages two order statistics. How does its variance
 compare with that of the median of the next odd size?</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">qw</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/os_quantile_weights.html">os_quantile_weights</a></span><span class="op">(</span>p <span class="op">=</span> <span class="fl">0.5</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>   <span class="co"># type 7, R's default</span></span>
 <span><span class="va">qw</span><span class="op">$</span><span class="va">W</span>   <span class="co"># one column per probability, rows named by rank</span></span>
 <span><span class="co">#&gt;    50%</span></span>
@@ -585,7 +764,7 @@ single order statistic. The standard deviation of the median of ten is
 <p><code><a href="../reference/os_lin_moments.html">os_lin_moments()</a></code> takes any weights. With one column per
 statistic, it returns their means and their covariance matrix, so the
 range and the midrange of the same sample come together:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">20</span>, ranks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">20</span><span class="op">)</span>, dist <span class="op">=</span> <span class="st">"logis"</span><span class="op">)</span></span>
 <span><span class="va">W</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, midrange <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/os_lin_moments.html">os_lin_moments</a></span><span class="op">(</span><span class="va">W</span>, <span class="va">m</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"cov"</span><span class="op">)</span><span class="op">]</span></span>
@@ -607,24 +786,24 @@ summary: the minimum, the three quartiles and the maximum of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>25</mn></mrow><annotation encoding="application/x-tex">n = 25</annotation></semantics></math>
 observations. If the data are normal, <code><a href="../reference/os_blue.html">os_blue()</a></code> gives the
 weights of the linear unbiased estimators of the mean and the standard
-deviation with the smallest variance, in <code>w_location</code> and
-<code>w_scale</code>. It also gives the variances of those estimators
+deviation with the smallest variance, in <code>w_mu</code> and
+<code>w_sigma</code>. It also gives the variances of those estimators
 per unit of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>σ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\sigma^2</annotation></semantics></math>,
-in <code>var_location</code> and <code>var_scale</code>. The chunk
-prints the weights and the standard errors in units of
+in <code>var_mu</code> and <code>var_sigma</code>. The chunk prints the
+weights and the standard errors in units of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">five</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">7</span>, <span class="fl">13</span>, <span class="fl">19</span>, <span class="fl">25</span><span class="op">)</span>   <span class="co"># the five-number ranks when n = 25 = 4 * 6 + 1</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/os_blue.html">os_blue</a></span><span class="op">(</span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">25</span>, ranks <span class="op">=</span> <span class="va">five</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">w_location</span>, <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">w_mu</span>, <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     r1     r7    r13    r19    r25 </span></span>
 <span><span class="co">#&gt; 0.0821 0.2857 0.2644 0.2857 0.0821</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">w_scale</span>, <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">w_sigma</span>, <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      r1      r7     r13     r19     r25 </span></span>
 <span><span class="co">#&gt; -0.1713 -0.2566  0.0000  0.2566  0.1713</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>se_of_mean_estimate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">var_location</span><span class="op">)</span>,</span>
-<span>  se_of_sd_estimate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">var_scale</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>se_of_mean_estimate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">var_mu</span><span class="op">)</span>,</span>
+<span>  se_of_sd_estimate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">b</span><span class="op">$</span><span class="va">var_sigma</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; se_of_mean_estimate   se_of_sd_estimate </span></span>
 <span><span class="co">#&gt;           0.2068675           0.1585884</span></span></code></pre></div>
 <p>The standard error of the estimated mean is 0.2069
@@ -633,21 +812,30 @@ against
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mi>/</mi><msqrt><mn>25</mn></msqrt><mo>=</mo><mn>0.2</mn><mspace width="0.167em"></mspace><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma/\sqrt{25} = 0.2\,\sigma</annotation></semantics></math>
 for the sample mean of all 25 observations. So the standard error from
 the five-number summary is 3.4% larger here. The scale that
-<code><a href="../reference/os_blue.html">os_blue()</a></code> estimates is the family’s scale parameter: the
-standard deviation for the normal, the scale parameter for the logistic
-or the Gumbel, and the length of the support for the uniform. The same
-call works for any family and any subset of two or more ranks whose
-covariance matrix is invertible. For example, here is the BLUE of a
-logistic location and scale from a complete sample of nine:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code><a href="../reference/os_blue.html">os_blue()</a></code> estimates is the multiplier
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
+of the family’s standard member in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mo>+</mo><mi>σ</mi><mi>Z</mi></mrow><annotation encoding="application/x-tex">\mu + \sigma Z</annotation></semantics></math>:
+the standard deviation for the normal, the scale parameter for the
+logistic, the Gumbel, the gamma or the Weibull, and the length of the
+support for the uniform. The standard member
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Z</mi><annotation encoding="application/x-tex">Z</annotation></semantics></math>
+carries the shape parameters of the call, such as the degrees of freedom
+of a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+distribution. The same call works for any family and any subset of two
+or more ranks whose covariance matrix is invertible. For example, here
+is the BLUE of a logistic location and scale from a complete sample of
+nine:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/os_blue.html">os_blue</a></span><span class="op">(</span><span class="fu"><a href="../reference/os_moments.html">os_moments</a></span><span class="op">(</span><span class="fl">9</span>, dist <span class="op">=</span> <span class="st">"logis"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">bl</span><span class="op">$</span><span class="va">w_location</span>, <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">bl</span><span class="op">$</span><span class="va">w_mu</span>, <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="co">#&gt;     r1     r2     r3     r4     r5     r6     r7     r8     r9 </span></span>
 <span><span class="co">#&gt; 0.0320 0.0901 0.1335 0.1600 0.1689 0.1600 0.1335 0.0901 0.0320</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>var_location <span class="op">=</span> <span class="va">bl</span><span class="op">$</span><span class="va">var_location</span>, var_scale <span class="op">=</span> <span class="va">bl</span><span class="op">$</span><span class="va">var_scale</span>,</span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>var_mu <span class="op">=</span> <span class="va">bl</span><span class="op">$</span><span class="va">var_mu</span>, var_sigma <span class="op">=</span> <span class="va">bl</span><span class="op">$</span><span class="va">var_sigma</span>,</span>
 <span>        cov <span class="op">=</span> <span class="va">bl</span><span class="op">$</span><span class="va">cov</span><span class="op">)</span>, <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; var_location    var_scale          cov </span></span>
-<span><span class="co">#&gt;      0.34247      0.08627      0.00000</span></span></code></pre></div>
+<span><span class="co">#&gt;    var_mu var_sigma       cov </span></span>
+<span><span class="co">#&gt;   0.34247   0.08627   0.00000</span></span></code></pre></div>
 <p>The covariance of the two estimators prints as zero, because the
 standard logistic is symmetric about zero and the rank set is complete.
 So the location and scale estimators are uncorrelated.</p>
@@ -655,9 +843,9 @@ So the location and scale estimators are uncorrelated.</p>
 <div class="section level2">
 <h2 id="appendix-a-how-the-integrals-are-evaluated">Appendix A: how the integrals are evaluated<a class="anchor" aria-label="anchor" href="#appendix-a-how-the-integrals-are-evaluated"></a>
 </h2>
-<p>This appendix states the integrals and the four numerical approaches
-that evaluate them, for the reader who wants to know what “exact” rests
-on. The density of
+<p>This appendix states the integrals and the numerical design that
+evaluates them, for the reader who wants to know what “exact” rests on.
+The density of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><annotation encoding="application/x-tex">X_{(r)}</annotation></semantics></math>
 and the joint density of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><annotation encoding="application/x-tex">X_{(r)}</annotation></semantics></math>
@@ -678,82 +866,41 @@ and the moments are their integrals against
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mn>2</mn></msup><annotation encoding="application/x-tex">x^2</annotation></semantics></math>
 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mi>z</mi></mrow><annotation encoding="application/x-tex">yz</annotation></semantics></math>
-(David and Nagaraja, 2003). The package evaluates them with
-<code><a href="https://rdrr.io/r/stats/integrate.html" class="external-link">integrate()</a></code> and four approaches.</p>
-<ol style="list-style-type: decimal">
+(David and Nagaraja, 2003). The package evaluates them with R’s
+<code><a href="https://rdrr.io/r/stats/integrate.html" class="external-link">integrate()</a></code>, an adaptive rule that estimates its own error
+from the points where it evaluates the integrand. R’s help page warns
+that such a rule can miss a narrow peak that falls between its points
+and still report a small error. The design below is built around that
+warning and around the limits of double-precision floating-point numbers
+(“doubles” below). It has three parts: what is computed, how it is
+integrated, and how the integrand is evaluated. Wu and Tong (2026) give
+the reasons and the evidence in full.</p>
+<p><strong>What is computed.</strong> Two choices keep the quantities
+well scaled.</p>
+<ul>
 <li>
-<strong>Everything on the log scale.</strong> The factorials
-overflow double precision
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>!</mi></mrow><annotation encoding="application/x-tex">n!</annotation></semantics></math>
-alone does from
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>171</mn></mrow><annotation encoding="application/x-tex">n = 171</annotation></semantics></math>
-on), and the powers of the tail probabilities underflow to zero at large
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.
-So the package works with logarithms. The log of the coefficient comes
-from <code><a href="https://rdrr.io/r/base/Special.html" class="external-link">lbeta()</a></code>, the log powers of the tails from
-<code>p(x, log.p = TRUE)</code> and
-<code>p(x, lower.tail = FALSE, log.p = TRUE)</code>, and the log density
-from <code>d(x, log = TRUE)</code>. The sum is exponentiated once.
-Working on the log scale is the approach of Royston (1982) for the means
-of normal order statistics, carried to the product moments.</li>
-<li>
-<strong>No cancellation in
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>z</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">F(z) - F(y)</annotation></semantics></math>.</strong>
-When both points lie above the median,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">F(y)</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>z</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">F(z)</annotation></semantics></math>
-are close to one, and their difference loses its relative precision. The
-package therefore forms the difference on the side where the
-probabilities are small. It computes
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>z</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">{</mo><mn>1</mn><mo>−</mo><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>z</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">F(z)\{1 - F(y)/F(z)\}</annotation></semantics></math>
-when both points lie below the median, and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">{</mo><mn>1</mn><mo>−</mo><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>z</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">S(y)\{1 - S(z)/S(y)\}</annotation></semantics></math>
-with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><mn>1</mn><mo>−</mo><mi>F</mi></mrow><annotation encoding="application/x-tex">S = 1 - F</annotation></semantics></math>
-when both lie above it. The logarithm of the difference then keeps its
-relative precision.</li>
-<li>
-<strong>A split around the peak.</strong> The density of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><annotation encoding="application/x-tex">X_{(r)}</annotation></semantics></math>
-concentrates near
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Q(r/(n+1))</annotation></semantics></math>,
-in a region whose width shrinks like
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>n</mi><mrow><mi>−</mi><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><annotation encoding="application/x-tex">n^{-1/2}</annotation></semantics></math>.
-An adaptive rule started on the whole line can miss that region, and
-return a value near zero with a small claimed error. The package
-therefore splits the range at the peak plus and minus ten large-sample
-standard deviations of the order statistic, with a floor of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mi>/</mi><msqrt><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msqrt></mrow><annotation encoding="application/x-tex">4/\sqrt{n+1}</annotation></semantics></math>
-in the standardized units of approach 4. The peak then sits inside a
-finite piece. The inner integral of a covariance is split the same way,
-around the peak of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><annotation encoding="application/x-tex">X_{(s)}</annotation></semantics></math>.
-Its outer integral is split at the split points of both order
-statistics, because the inner quadrature changes its pieces where the
-outer variable crosses them.</li>
-<li>
-<strong>Integration in standardized units, each moment about its own
-location.</strong> The integrals are taken in
+<em>Standardized units.</em> The integrals are taken in
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mo stretchy="false" form="prefix">{</mo><mi>x</mi><mo>−</mo><mi>Q</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mi>/</mi><mn>2</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo><mi>/</mi><mover><mi>σ</mi><mo accent="true">̃</mo></mover></mrow><annotation encoding="application/x-tex">t = \{x - Q(1/2)\}/\tilde\sigma</annotation></semantics></math>,
 where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Q</mi><annotation encoding="application/x-tex">Q</annotation></semantics></math>
-is the quantile function of the standard member and
+is the quantile function of the standard member and the spread
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>σ</mi><mo accent="true">̃</mo></mover><annotation encoding="application/x-tex">\tilde\sigma</annotation></semantics></math>
 is its interquartile range divided by that of the standard normal. So
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>σ</mi><mo accent="true">̃</mo></mover><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\tilde\sigma = 1</annotation></semantics></math>
-for the normal. The scaling puts the split floor and the integrator’s
-absolute tolerances in the distribution’s own units, so a distribution
-supplied on any scale is computed as accurately as on scale one. The
-moments of
+for the normal. The cut points and the integrator’s absolute tolerances
+below are then in the distribution’s own units, and a distribution
+supplied on any scale is computed as accurately as on scale one.</li>
+<li>
+<em>Each moment about the center of its own order statistic.</em>
+The moments of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><annotation encoding="application/x-tex">X_{(r)}</annotation></semantics></math>
-are taken about its own location
+are taken about
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mi>r</mi></msub><annotation encoding="application/x-tex">c_r</annotation></semantics></math>,
 the point
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Q(r/(n+1))</annotation></semantics></math>
-in these units, which is also a split point. Without this centering, the
-variance of an order statistic far from the median would be the small
-difference of two moments of size
+in these units. Without this centering, the variance of an order
+statistic far from the median would be the small difference of two
+moments of size
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>c</mi><mi>r</mi><mn>2</mn></msubsup><annotation encoding="application/x-tex">c_r^2</annotation></semantics></math>,
 and it would lose its precision at large
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.
@@ -770,44 +917,161 @@ extremes, whose correlation is of order
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">1/n</annotation></semantics></math>.
 Its relative error is the error of its correlation divided by the
 correlation, up to the relative errors of the two variances. The help
-page of <code><a href="../reference/os_moments.html">os_moments()</a></code> states the measured cases. Location
-and scale are applied after the integration.</li>
-</ol>
-<p>The tolerances decide when <code><a href="https://rdrr.io/r/stats/integrate.html" class="external-link">integrate()</a></code> stops. The single
+page of <code><a href="../reference/os_moments.html">os_moments()</a></code> states the measured cases. The
+family’s other parameters, <code>os_shift</code> and
+<code>os_multiplier</code> are applied after the integration.</li>
+</ul>
+<p><strong>How it is integrated.</strong> Three rules keep the adaptive
+rule on the mass of each integrand.</p>
+<ul>
+<li>
+<em>A cut around the peak.</em> The density of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><annotation encoding="application/x-tex">X_{(r)}</annotation></semantics></math>
+concentrates near
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mi>r</mi></msub><annotation encoding="application/x-tex">c_r</annotation></semantics></math>,
+in a region whose width shrinks like
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>n</mi><mrow><mi>−</mi><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><annotation encoding="application/x-tex">n^{-1/2}</annotation></semantics></math>.
+An adaptive rule started on the whole line can miss that region, and
+return a value near zero with a small claimed error. The package
+therefore cuts the range at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mi>r</mi></msub><mo>±</mo><msub><mi>h</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">c_r \pm h_r</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>h</mi><mi>r</mi></msub><annotation encoding="application/x-tex">h_r</annotation></semantics></math>
+is ten large-sample standard deviations of the order statistic,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>r</mi></msub><annotation encoding="application/x-tex">d_r</annotation></semantics></math>,
+plus a minimum half-width of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mi>/</mi><msqrt><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msqrt></mrow><annotation encoding="application/x-tex">4/\sqrt{n+1}</annotation></semantics></math>.
+The peak then sits inside a finite piece. The first moment, whose
+integrand changes sign at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mi>r</mi></msub><annotation encoding="application/x-tex">c_r</annotation></semantics></math>,
+is cut there as well. The inner integral of a covariance is cut the same
+way, around the peak of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><annotation encoding="application/x-tex">X_{(s)}</annotation></semantics></math>.
+Its outer integral is cut at the points of both order statistics,
+because the inner quadrature changes its pieces where the outer variable
+crosses them.</li>
+<li>
+<em>Tolerances scaled to the order statistic.</em> The single
 integrals and the inner integrals run at a relative tolerance of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>11</mn></mrow></msup><annotation encoding="application/x-tex">10^{-11}</annotation></semantics></math>,
 and the outer integrals at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>9</mn></mrow></msup><annotation encoding="application/x-tex">10^{-9}</annotation></semantics></math>.
 The inner tolerance is a hundred times tighter, so that the noise of the
 inner quadrature stays below what the outer rule resolves. The absolute
-tolerances and the acceptance thresholds are multiplied by
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">min</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><msub><mi>w</mi><mi>r</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\min(1, w_r)</annotation></semantics></math>,
-where
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mi>r</mi></msub><annotation encoding="application/x-tex">w_r</annotation></semantics></math>
-is ten large-sample standard deviations of the order statistic. The
-reason is that a narrow order statistic has small moments: the variance
-of the minimum of a million uniform observations is
+tolerances are multiplied by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">min</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><msub><mi>d</mi><mi>r</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\min(1, d_r)</annotation></semantics></math>
+once for each factor of the moment: once for a first moment and twice
+for a second moment of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mrow><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo stretchy="false" form="postfix">)</mo></mrow></msub><annotation encoding="application/x-tex">X_{(r)}</annotation></semantics></math>,
+by the factor of rank
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+for the inner integral of a covariance, and by the factors of both ranks
+for its outer integral. The reason is that a narrow order statistic has
+small moments: the variance of the minimum of a million uniform
+observations is
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>7</mn><mo>×</mo><msup><mn>10</mn><mrow><mi>−</mi><mn>12</mn></mrow></msup></mrow><annotation encoding="application/x-tex">7 \times 10^{-12}</annotation></semantics></math>
 in standardized units, below a fixed tolerance that suits the normal.
 The inner integral’s absolute tolerance is also divided by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">max</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><mo stretchy="false" form="prefix">|</mo><mi>y</mi><mo>−</mo><msub><mi>c</mi><mi>r</mi></msub><mo stretchy="false" form="prefix">|</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\max(1, |y - c_r|)</annotation></semantics></math>,
 the outer factor that multiplies it, so that the far tail of a
-heavy-tailed parent is not lost. With this, a lognormal with
+heavy-tailed distribution is not lost. With this, a lognormal with
 <code>sdlog = 2</code> is accurate to about
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>9</mn></mrow></msup><annotation encoding="application/x-tex">10^{-9}</annotation></semantics></math>
 in relative terms, rather than
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>11</mn></mrow></msup><annotation encoding="application/x-tex">10^{-11}</annotation></semantics></math>.</p>
-<p><code><a href="https://rdrr.io/r/stats/integrate.html" class="external-link">integrate()</a></code> may report a roundoff or subdivision problem
-on a piece of the range. The package accepts such a piece when its error
-estimate is below
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>11</mn></mrow></msup><annotation encoding="application/x-tex">10^{-11}</annotation></semantics></math>.</li>
+<li>
+<em>Refusal rules.</em> <code><a href="https://rdrr.io/r/stats/integrate.html" class="external-link">integrate()</a></code> may report a
+roundoff or subdivision problem on a piece of the range. The package
+accepts such a piece when its error estimate is below
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>10</mn></mrow></msup><annotation encoding="application/x-tex">10^{-10}</annotation></semantics></math>,
-multiplied by the same factor
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">min</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><msub><mi>w</mi><mi>r</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\min(1, w_r)</annotation></semantics></math>
-as the tolerances. Otherwise it stops the computation with an error. A
-piece on an infinite range that <code><a href="https://rdrr.io/r/stats/integrate.html" class="external-link">integrate()</a></code> reports as
-probably divergent is accepted only when its value is below that scaled
+multiplied by the same factors as the tolerances. Otherwise it stops the
+computation with an error. A piece on an infinite range that
+<code><a href="https://rdrr.io/r/stats/integrate.html" class="external-link">integrate()</a></code> reports as probably divergent is accepted only
+when its value is below that scaled
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>10</mn></mrow></msup><annotation encoding="application/x-tex">10^{-10}</annotation></semantics></math>
-as well.</p>
+as well. The density of every order statistic is also integrated and
+must have mass 1 within
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>7</mn></mrow></msup><annotation encoding="application/x-tex">10^{-7}</annotation></semantics></math>,
+and a variance that comes out zero or negative stops the
+computation.</li>
+</ul>
+<p>A density that is infinite at a finite endpoint of the support needs
+one more rule. A gamma, a chi-square, a Weibull, a beta or an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
+distribution with a shape
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+below 1 has a density that grows like
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>e</mi><mrow><mi>a</mi><mo>−</mo><mn>1</mn></mrow></msup><annotation encoding="application/x-tex">e^{a-1}</annotation></semantics></math>
+in the distance
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>e</mi><annotation encoding="application/x-tex">e</annotation></semantics></math>
+from the endpoint, and an extreme order statistic can sit so close to
+the endpoint that the centered variable
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+cannot tell its points apart. Next to such an endpoint the package
+integrates in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>=</mo><msup><mi>e</mi><mi>a</mi></msup></mrow><annotation encoding="application/x-tex">v = e^a</annotation></semantics></math>.
+In this variable the distribution function is nearly linear, the
+integrand is bounded, and the distance from the endpoint is the
+integration variable itself, so an order statistic far closer to the
+endpoint than
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+resolves is still placed. For a built-in family
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>
+is the family’s own shape, and for a user’s distribution with an
+infinite density at a lower endpoint the package estimates it from the
+distribution function. The upper endpoint of the built-in beta is
+treated through
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>X</mi></mrow><annotation encoding="application/x-tex">1 - X</annotation></semantics></math>,
+which is the beta with its two shapes exchanged. The range is also cut
+around the peak of the order statistic in the variable
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math>,
+because that peak is far narrower than the pieces of the ordinary cut.
+The tests assert the result against exact values: the minimum of 1001
+Weibull observations with shape 0.3, and the minimum of a million
+observations from a
+beta(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>,
+1) at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">a = 0.5</annotation></semantics></math>,
+0.1 and 0.05, agree with their closed forms within
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>10</mn></mrow></msup><annotation encoding="application/x-tex">10^{-10}</annotation></semantics></math>
+for the mean and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>9</mn></mrow></msup><annotation encoding="application/x-tex">10^{-9}</annotation></semantics></math>
+for the variance in relative terms.</p>
+<p><strong>How the integrand is evaluated.</strong> Two rules keep each
+value of the integrand accurate.</p>
+<ul>
+<li>
+<em>The logarithmic scale.</em> The factorials overflow doubles
+(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>!</mi></mrow><annotation encoding="application/x-tex">n!</annotation></semantics></math>
+alone does from
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>171</mn></mrow><annotation encoding="application/x-tex">n = 171</annotation></semantics></math>
+on), and the powers of the tail probabilities underflow to zero at large
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.
+So the package works with logarithms. The log of the coefficient comes
+from <code><a href="https://rdrr.io/r/base/Special.html" class="external-link">lbeta()</a></code>, the log powers of the tails from
+<code>p(x, log.p = TRUE)</code> and
+<code>p(x, lower.tail = FALSE, log.p = TRUE)</code>, and the log density
+from <code>d(x, log = TRUE)</code>. The sum is exponentiated once.
+Working on the log scale is the approach of Royston (1982) for the means
+of normal order statistics, carried to the product moments.</li>
+<li>
+<em>No cancellation in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>z</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">F(z) - F(y)</annotation></semantics></math>.</em>
+When both points lie above the median,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">F(y)</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>z</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">F(z)</annotation></semantics></math>
+are close to one, and their difference loses its relative precision. The
+package therefore forms the difference on the side where the
+probabilities are small. It computes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>z</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">{</mo><mn>1</mn><mo>−</mo><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>z</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">F(z)\{1 - F(y)/F(z)\}</annotation></semantics></math>
+when both points lie below the median, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="prefix">{</mo><mn>1</mn><mo>−</mo><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>z</mi><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>y</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">S(y)\{1 - S(z)/S(y)\}</annotation></semantics></math>
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo>=</mo><mn>1</mn><mo>−</mo><mi>F</mi></mrow><annotation encoding="application/x-tex">S = 1 - F</annotation></semantics></math>
+when both lie above it. The logarithm of the difference then keeps its
+relative precision.</li>
+</ul>
 <p>The closed forms used by default are the beta and Dirichlet moments
 of the uniform, the exponential’s representation as a sum of independent
 exponential spacings, the digamma and trigamma forms of the logistic
@@ -884,7 +1148,8 @@ covariances of the logistic and the Gumbel, which follow from
 <li>the variance of the Cauchy median of five against the integral on
 the uniform scale, within
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>9</mn></mrow></msup><annotation encoding="application/x-tex">10^{-9}</annotation></semantics></math>.</li>
-<li>the permutation identities for all five families by quadrature at
+<li>the permutation identities for the first five families by quadrature
+at
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">n = 5</annotation></semantics></math>,
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>9</mn><annotation encoding="application/x-tex">9</annotation></semantics></math>
 and
@@ -892,6 +1157,39 @@ and
 within
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>9</mn></mrow></msup><annotation encoding="application/x-tex">10^{-9}</annotation></semantics></math>,
 and the unit row sums for the normal.</li>
+<li>for the eight families added in version 0.3.0: the Weibull against
+its closed-form moments at shapes 0.3, 0.5 and 2, at the two lowest
+ranks for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">n = 5</annotation></semantics></math>
+and 101 and at the minimum of 1001 for shape 0.3, within
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>10</mn></mrow></msup><annotation encoding="application/x-tex">10^{-10}</annotation></semantics></math>
+for the means and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>9</mn></mrow></msup><annotation encoding="application/x-tex">10^{-9}</annotation></semantics></math>
+for the variances in relative terms; the minimum of 101, 1001 and 3001
+observations from a beta(0.1, 1) and of a million observations from a
+beta(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>,
+1) at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">a = 0.5</annotation></semantics></math>,
+0.1 and 0.05, the maximum of the reflected distribution, and the
+covariances next to the endpoint, against their exact values; the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+with 2 degrees of freedom against its closed-form moments; the
+permutation identities against the exact moments of the parent at
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">n = 8</annotation></semantics></math>
+for the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
+gamma, chi-square, beta, lognormal, Weibull and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>
+families, including shapes below 1; the special cases that coincide with
+a family that has closed forms (a gamma or a Weibull with shape 1, a
+beta with both shapes 1); and the refusal of each moment that does not
+exist for the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
+the Cauchy and the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math>.</li>
+<li>that the split of a family’s parameters into the standard member, a
+shift and a multiplier returns the scaled moments of the standard
+member.</li>
 <li>the tables of Tietjen, Kahaner and Beckman (1976) at the five-number
 ranks for
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">n = 5</annotation></semantics></math>
@@ -951,19 +1249,24 @@ to
 against the standard normal’s moments scaled, within
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>11</mn></mrow></msup><annotation encoding="application/x-tex">10^{-11}</annotation></semantics></math>
 in relative terms.</li>
-<li>the minimum of 10 and of 100 observations from a beta(1/2, 1/2)
-against a quadrature in the probability scale, within
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>10</mn></mrow></msup><annotation encoding="application/x-tex">10^{-10}</annotation></semantics></math>
-in relative terms, and the minimum of a thousand and of
+<li>the minimum of 10, 100, 1000 and
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mn>5</mn></msup><annotation encoding="application/x-tex">10^5</annotation></semantics></math>
-refused with an error.</li>
+observations from a beta(1/2, 1/2) supplied through
+<code><a href="../reference/os_dist.html">os_dist()</a></code> against a quadrature in the probability scale,
+within
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>10</mn></mrow></msup><annotation encoding="application/x-tex">10^{-10}</annotation></semantics></math>
+in relative terms for the mean, and the maximum of a thousand and of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mn>5</mn></msup><annotation encoding="application/x-tex">10^5</annotation></semantics></math>,
+next to the upper endpoint, refused with an error. For the built-in beta
+the two extremes of 1001 observations are computed and mirror each
+other.</li>
 <li>the covariance of the two order statistics of two beta(1/2, 1/2)
 observations against its exact value
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn><mi>/</mi><msup><mi>π</mi><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">4/\pi^4</annotation></semantics></math>,
 within
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>9</mn></mrow></msup><annotation encoding="application/x-tex">10^{-9}</annotation></semantics></math>.</li>
 <li>a mixture of two narrow normals refused by the mass check, and the
-range of two uniform observations at <code>location = 1e16</code>
+range of two uniform observations at <code>os_shift = 1e16</code>
 computed exactly.</li>
 <li>the covariance of the two order statistics of two lognormal
 observations with <code>sdlog = 2</code> against its exact value, within
@@ -997,7 +1300,7 @@ statistics (exact and approximate). <em>Applied Statistics</em>, 31(2),
 and covariances of the normal order statistics for sample sizes 2 to 50.
 Report LA-6482-MS, Los Alamos Scientific Laboratory, Los Alamos, New
 Mexico.</p>
-<p>Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances
+<p>Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances,
 and covariances of order statistics in R. Manuscript.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

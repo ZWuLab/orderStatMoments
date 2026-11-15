@@ -4,9 +4,12 @@ Computes the exact means, variances and covariances of the order
 statistics \\X\_{(1)} \le \dots \le X\_{(n)}\\ of an i.i.d. sample from
 a continuous distribution, at any ranks and any sample size, by
 numerical evaluation of the defining integrals, with closed forms where
-the distribution has them. Five families are built in (normal, uniform,
-exponential, logistic and Gumbel), and any other continuous distribution
-enters through its distribution, density and quantile functions via
+the distribution has them. Thirteen families are built in and are given
+as in R, by name and with R's own parameters: the normal, uniform,
+exponential, logistic, Gumbel, Student \\t\\, Cauchy, gamma, chi-square,
+beta, lognormal, Weibull and \\F\\ distributions. Any other continuous
+distribution enters through its distribution, density and quantile
+functions via
 [`os_dist`](https://zwulab.github.io/orderStatMoments/reference/os_dist.md).
 
 ## Details
@@ -30,8 +33,8 @@ the reference.
 
 ## References
 
-Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances and
-covariances of order statistics in R. Manuscript.
+Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances,
+and covariances of order statistics in R. Manuscript.
 
 ## See also
 
