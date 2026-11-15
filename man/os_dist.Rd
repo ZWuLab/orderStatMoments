@@ -11,7 +11,8 @@ os_dist(
   support = c(-Inf, Inf),
   symmetric = FALSE,
   tail = c(Inf, Inf),
-  name = "user"
+  name = "user",
+  breaks = NULL
 )
 }
 \arguments{
@@ -41,33 +42,50 @@ for a tail that decays faster than any power, or for a bounded tail. The
 indices decide which moments exist (see Details).}
 
 \item{name}{A label for printing.}
+
+\item{breaks}{Numeric vector, or \code{NULL} for none: the points strictly
+inside the support at which the density is not smooth, that is, where it
+has a kink or a jump (the median of the Laplace distribution, the mode of
+a triangular distribution, the knots of a piecewise density). The density
+must be finite there, and it may be zero. \code{os_moments()} cuts every integral at these
+points (see Details). For a symmetric distribution the points must be
+symmetric about the median.}
 }
 \value{
 An object of class \code{"os_dist"}: a list with the components
   \code{name}, \code{p}, \code{d}, \code{q}, \code{support},
-  \code{symmetric}, \code{tail}, \code{center} (the median \eqn{Q(1/2)}) and
+  \code{symmetric}, \code{tail}, \code{center} (the median \eqn{Q(1/2)}),
   \code{closed} (the closed-form moments the distribution has, none for a
-  user distribution).
+  user's distribution) and \code{breaks} (sorted, \code{NULL} when there are
+  none).
 }
 \description{
 Builds the distribution object that \code{\link{os_moments}} takes in its
 \code{dist} argument, from the distribution function, the density and the
-quantile function of a continuous distribution. The object describes the
-standard member of a location-scale family: \code{os_moments()} computes the
-moments for this member and applies its own \code{location} and
-\code{scale} arguments afterwards. A user who wants a \eqn{t_5} distribution
-with location 3 and scale 2 supplies the \eqn{t_5} functions here and passes
-\code{location = 3, scale = 2} to \code{os_moments()}.
+quantile function of a continuous distribution that is not among the
+built-in families. The three functions define the distribution itself, with
+its parameters fixed inside them. \code{os_moments()} computes the moments
+of the order statistics of this distribution, and its arguments
+\code{os_shift} and \code{os_multiplier} give those of \eqn{a + bX}.
 }
 \details{
-\strong{The moment condition.} For a parent whose density decays like
+The thirteen built-in families need no call of \code{os_dist()}: the normal,
+uniform, exponential, logistic, Gumbel, Student \eqn{t}, Cauchy, gamma,
+chi-square, beta, lognormal, Weibull and \eqn{F} distributions are given to
+\code{os_moments()} by name, with R's own parameters, and the package sets
+their supports and tail indices.
+
+
+\strong{The moment condition.} For a distribution whose density decays like
 \eqn{|x|^{-\nu - 1}}, the density of \eqn{X_{(r)}} decays like
-\eqn{|x|^{-\nu r - 1}} below and like \eqn{x^{-\nu (n - r + 1) - 1}} above,
-so \eqn{E|X_{(r)}|^k < \infty} if and only if \eqn{\nu_L r > k} and
+\eqn{|x|^{-\nu r - 1}} in the lower tail and like
+\eqn{x^{-\nu (n - r + 1) - 1}} in the upper tail, so
+\eqn{E|X_{(r)}|^k < \infty} if and only if \eqn{\nu_L r > k} and
 \eqn{\nu_U (n - r + 1) > k}. \code{os_moments()} applies this condition with
 \eqn{k = 2} to every requested rank and refuses a moment that does not exist.
-A Cauchy parent, \code{tail = c(1, 1)}, has a median of five with a finite
-variance and extremes without a mean.
+The package cannot check the declared indices. The default
+\code{tail = c(Inf, Inf)} declares that every moment exists, so the indices
+of a heavy-tailed distribution must be given.
 
 \strong{Accuracy requirement.} The log-tails \code{p(x, log.p = TRUE)} and
 \code{p(x, lower.tail = FALSE, log.p = TRUE)} must keep relative precision
@@ -77,58 +95,83 @@ integrals with it. \code{os_dist()} checks that the three functions honor
 their arguments at the median and are vectorized, and that \code{d}
 integrates to \eqn{1/2} between the quartiles, where \code{p} rises by
 \eqn{1/2}. \code{os_moments()} checks that the log-tails and the log-density
-are finite at the median and at the split points of the smallest and the
+are finite at the median and at the cut points of the smallest and the
 largest requested rank, and that the density of every order statistic it
 integrates has mass 1. None of these certifies accuracy.
 
-\strong{Location limit.} The integrals are taken about the median of the
-standard member, and the integration range is split in units of its spread
-(its interquartile range), so the scale on which the standard member is
-supplied does not matter: the package's tests check a normal supplied with
-standard deviations from \eqn{10^{-3}} to \eqn{10^6}. Its location does: a standard member whose own
-location is large, say \eqn{10^8} with unit scale, loses the digits of
+\strong{A distribution far from the origin.} The integrals are taken about
+the median of the supplied distribution, in units of its spread (its
+interquartile range divided by that of the standard normal), so the scale on
+which the distribution is supplied does not matter: the package's tests
+check a normal supplied with standard deviations from \eqn{10^{-3}} to
+\eqn{10^6}. Its position does: a distribution whose median is large against
+its spread, say \eqn{10^8} with unit spread, loses the digits of
 \eqn{x - Q(1/2)} in double precision and the computation stops with an
-error. Supply the standard member and pass the location to
-\code{os_moments()} instead, which also keeps \code{os_blue()} exact.
+error. Such a distribution is supplied near the origin, and the shift is
+passed to \code{os_moments()} as \code{os_shift}, which is applied exactly.
+This also keeps \code{os_blue()} exact.
 
-\strong{Common parents.} Each function wraps the corresponding
-\code{stats} function with its shape fixed and passes \code{lower.tail},
-\code{log.p} and \code{log} by name, as in the examples. The declarations
-that differ between parents are these.
-\tabular{lll}{
-  Parent \tab \code{support} \tab \code{tail} \cr
-  Student \eqn{t_\nu} (\code{pt}, \code{dt}, \code{qt}), symmetric \tab \code{c(-Inf, Inf)} \tab \code{c(nu, nu)} \cr
-  gamma (\code{pgamma}, \code{dgamma}, \code{qgamma}) \tab \code{c(0, Inf)} \tab \code{c(Inf, Inf)} \cr
-  Weibull (\code{pweibull}, \code{dweibull}, \code{qweibull}) \tab \code{c(0, Inf)} \tab \code{c(Inf, Inf)} \cr
-  lognormal (\code{plnorm}, \code{dlnorm}, \code{qlnorm}) \tab \code{c(0, Inf)} \tab \code{c(Inf, Inf)} \cr
-  beta (\code{pbeta}, \code{dbeta}, \code{qbeta}) \tab \code{c(0, 1)} \tab \code{c(Inf, Inf)}
-}
-The lognormal tail decays faster than any power, so every moment exists.
-A distribution declared on \code{c(-Inf, Inf)} whose density is zero below
-some point stops with an error that its log-tail is not finite, which is
-the sign that \code{support} is missing.
+\strong{A density that is infinite at an endpoint.} When the density is
+infinite at a finite lower endpoint of the support, as for a power or a
+gamma-type density with a shape below 1, \code{os_moments()} integrates next
+to that endpoint in the distance from it, raised to a power that it
+estimates from the distribution function. The distance is represented
+without rounding when the endpoint is 0, so such a distribution is
+supplied with its endpoint at 0. An infinite density at an upper endpoint
+has no such treatment for a user's distribution, and the order statistics
+next to it are computed less accurately or refused. Supplying the reflected
+variable, whose singular endpoint is the lower one, brings that endpoint
+under the treatment above.
+
+\strong{A density that is not smooth inside the support.} The quadrature
+rule assumes an integrand that is smooth inside each piece of the
+integration range. A point where the density has a kink or a jump, such as
+the median of the Laplace distribution, is therefore declared in
+\code{breaks}, and \code{os_moments()} then cuts every single integral and
+both levels of every double integral there, so that each piece is smooth.
+Without the declaration the covariances lose accuracy: for the Laplace
+example below, at \eqn{n = 5}, the sum of the covariance matrix misses its
+exact value by about \eqn{10^{-8}}, and with \code{breaks = 0} by less than
+\eqn{10^{-12}}. The means and the variances are affected less. The error
+estimate \code{quad_err} does not show the loss, and the residual
+\code{sum_B} of the run-time checks, which is available for a complete rank
+set, does. The package cannot find such points itself. The built-in families
+have none.
 }
 \examples{
-# Student t with 5 degrees of freedom: tail index 5 in both tails
-t5 <- os_dist(function(q, lower.tail = TRUE, log.p = FALSE)
-                stats::pt(q, df = 5, lower.tail = lower.tail, log.p = log.p),
-              function(x, log = FALSE) stats::dt(x, df = 5, log = log),
-              function(p) stats::qt(p, df = 5),
-              symmetric = TRUE, tail = c(5, 5), name = "t5")
-os_moments(5, dist = t5)
+# A Pareto distribution with shape 3 on [1, Inf): the upper tail index is 3,
+# so the variance of the maximum exists (3 * 1 > 2)
+pareto <- function(shape) os_dist(
+  p = function(q, lower.tail = TRUE, log.p = FALSE) {
+    ls <- -shape * log(pmax(q, 1))                  # log S(x) = -shape * log(x)
+    if (lower.tail) { if (log.p) log(-expm1(ls)) else -expm1(ls) }
+    else if (log.p) ls else exp(ls)
+  },
+  d = function(x, log = FALSE) {
+    ld <- ifelse(x >= 1, log(shape) - (shape + 1) * log(x), -Inf)
+    if (log) ld else exp(ld)
+  },
+  q = function(p) (1 - p)^(-1 / shape),
+  support = c(1, Inf), tail = c(Inf, shape), name = "pareto")
+os_moments(5, dist = pareto(3), cov = FALSE)
 
-# The Cauchy: the median of five has a variance, the extremes have no mean
-cauchy <- os_dist(stats::pcauchy, stats::dcauchy, stats::qcauchy,
-                  symmetric = TRUE, tail = c(1, 1), name = "cauchy")
-os_moments(5, ranks = 3, dist = cauchy)
+# With shape 1.5 the maximum has no variance, and the request is refused
+try(os_moments(5, ranks = 5, dist = pareto(1.5)))
+os_moments(5, ranks = 1:4, dist = pareto(1.5), cov = FALSE)$var
 
-# A gamma with shape 2: a semi-bounded support, every moment finite
-gamma2 <- os_dist(function(q, lower.tail = TRUE, log.p = FALSE)
-                    stats::pgamma(q, shape = 2, lower.tail = lower.tail, log.p = log.p),
-                  function(x, log = FALSE) stats::dgamma(x, shape = 2, log = log),
-                  function(p) stats::qgamma(p, shape = 2),
-                  support = c(0, Inf), name = "gamma2")
-os_moments(10, ranks = c(1, 5, 10), dist = gamma2, scale = 3)
+# The Laplace (double exponential) distribution, symmetric about 0, where its
+# density is not smooth
+laplace <- os_dist(
+  p = function(q, lower.tail = TRUE, log.p = FALSE) {
+    s <- if (lower.tail) q else -q                  # F(x) = S(-x) by symmetry
+    lp <- ifelse(s <= 0, log(0.5) + s, log1p(-0.5 * exp(-abs(s))))
+    if (log.p) lp else exp(lp)
+  },
+  d = function(x, log = FALSE) if (log) log(0.5) - abs(x) else 0.5 * exp(-abs(x)),
+  q = function(p) ifelse(p <= 0.5, log(2 * p), -log(2 * (1 - p))),
+  symmetric = TRUE, name = "laplace",
+  breaks = 0)                                       # the density has a kink at 0
+os_moments(5, dist = laplace, os_shift = 10, os_multiplier = 2)
 }
 \seealso{
 \code{\link{os_moments}}

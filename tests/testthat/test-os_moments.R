@@ -12,11 +12,13 @@ test_that("arguments are validated", {
   expect_error(os_moments(5, c(1, 1)), "increasing")
   expect_error(os_moments(5, 6), "1, ..., n")
   expect_error(os_moments(5, 1.5), "integers")
-  expect_error(os_moments(5, scale = 0), "'scale'")
-  expect_error(os_moments(5, scale = -1), "'scale'")
-  expect_error(os_moments(5, location = NA), "'location'")
+  expect_error(os_moments(5, os_multiplier = 0), "'os_multiplier'")
+  expect_error(os_moments(5, os_multiplier = -1), "'os_multiplier'")
+  expect_error(os_moments(5, os_shift = NA), "'os_shift'")
+  expect_error(os_moments(5, sd = 0), "'sd'")
+  expect_error(os_moments(5, mean = NA), "'mean'")
   expect_error(os_moments(5, method = "exact"))
-  expect_error(os_moments(5, dist = "cauchy"), "os_dist")
+  expect_error(os_moments(5, dist = "pois"), "os_dist")
   expect_error(os_moments(5, dist = list()), "os_dist")
   expect_error(os_moments(5, cov = NA), "'cov'")
   expect_error(os_moments(5, rel.tol = 0), "'rel.tol'")
@@ -46,7 +48,7 @@ test_that("the methods and the route", {
 })
 
 test_that("the symmetry halving gives the full computation at n = 13", {
-  f <- orderStatMoments:::.os_family("norm")
+  f <- orderStatMoments:::.os_family("norm")$dist
   full <- os_dist(f$p, f$d, f$q, symmetric = FALSE, name = "norm-full")
   a <- os_moments(13, 1:13, full)
   b <- os_moments(13, 1:13, "norm")
@@ -61,13 +63,13 @@ test_that("the symmetry halving gives the full computation at n = 13", {
 test_that("location and scale transform the standard member, at a location of 1e5 and 1e8", {
   rk <- c(1, 5, 10, 20)
   cl <- os_moments(20, rk, "unif")                                  # closed forms
-  m <- os_moments(20, rk, "unif", location = 1e5, scale = 1, method = "integrate")
+  m <- os_moments(20, rk, "unif", os_shift = 1e5, method = "integrate")
   expect_lt(max(abs((m$alpha - 1e5) - cl$alpha)), 1e-9)
   expect_lt(max(abs(m$B - cl$B)), 1e-10)
-  m <- os_moments(20, rk, "unif", location = 1e8, scale = 1, method = "integrate")
+  m <- os_moments(20, rk, "unif", os_shift = 1e8, method = "integrate")
   expect_lt(max(abs((m$alpha - 1e8) - cl$alpha)), 1e-7)            # the double keeps 8 decimals of 1e8 + x
   expect_lt(max(abs(m$B - cl$B)), 1e-10)
-  s <- os_moments(20, rk, "norm", location = -3, scale = 2.5)
+  s <- os_moments(20, rk, "norm", mean = -3, sd = 2.5)
   z <- os_moments(20, rk, "norm")
   expect_equal(unname(s$alpha), unname(-3 + 2.5 * z$alpha))
   expect_equal(unname(s$B), unname(2.5^2 * z$B))
@@ -102,7 +104,7 @@ test_that("the object and its print method", {
   expect_identical(m$ranks, c(1L, 3L, 5L))
   expect_true(is.numeric(m$quad_err) && m$quad_err >= 0)
   expect_identical(names(m$standard$alpha), c("r1", "r3", "r5"))
-  expect_output(print(m), "logis \\(location 2, scale 3\\), n = 5, ranks 1 3 5")
+  expect_output(print(m), "logis \\(location = 2, scale = 3\\), n = 5, ranks 1 3 5")
   expect_output(print(m), "route: mixed")
 })
 
@@ -192,11 +194,11 @@ test_that("the object carries the standard member's moments", {
 
 test_that("the scale is applied one factor at a time, and an overflow stops", {
   z <- os_moments(1001, 501, "unif")
-  m <- os_moments(1001, 501, "unif", scale = 1e155)                    # scale^2 overflows
+  m <- os_moments(1001, 501, "unif", max = 1e155)                      # the multiplier squared overflows
   expect_true(is.finite(m$var[[1]]))
   expect_equal(m$var[[1]], (z$var[[1]] * 1e155) * 1e155, tolerance = 1e-14)
-  expect_gt(os_moments(1, dist = "logis", scale = 1e-162)$var[[1]], 0) # scale^2 underflows
-  expect_error(os_moments(1001, 501, "unif", scale = 1e200), "overflow")
+  expect_gt(os_moments(1, dist = "logis", scale = 1e-162)$var[[1]], 0) # the multiplier squared underflows
+  expect_error(os_moments(1001, 501, "unif", max = 1e200), "overflow")
 })
 
 test_that("the normal row-sum identity follows the functions, not the label", {
@@ -234,28 +236,39 @@ test_that("a parent with a second mode is refused by the mass check", {
   expect_error(os_moments(1, dist = mix), "integrates to 0.9")
 })
 
-test_that("the extremes of a parent with an infinite endpoint density: computed, then refused", {
+test_that("the extremes of a user's distribution with an infinite endpoint density", {
   # the minimum of n observations from a beta(1/2, 1/2), whose density is infinite at 0,
   # concentrates against the endpoint on the scale n^-2. The reference is the quadrature
   # in the probability scale, Q(u) = sin(pi u/2)^2 and U_(1) ~ n (1 - u)^(n - 1), v = n u.
-  # At n = 1e5 the engine of the morning returned a variance 99 percent too small without
-  # a word (the second review round); now the extremes are computed to n = 100 and stop
-  # with an error from n = 1000 on, where the mass check or a bounded piece near the
-  # singular endpoint fails.
+  # At n = 1e5 the first engine returned a variance 99 percent too small without a word
+  # (the second review round), and the next one computed the extremes to n = 100 and
+  # stopped from n = 1000 on. Since version 0.3.0 the pieces next to the lower endpoint
+  # are integrated in the distance from it, so the minimum is computed at every n. The
+  # upper endpoint of a user's distribution has no such coordinate (the functions of the
+  # reflected variable are not available), so the maximum is computed to n = 100 and
+  # stops with an error from n = 1000 on. The built-in beta carries the reflected
+  # functions and has no such limit (test-os_families.R).
   b <- os_dist(function(q, lower.tail = TRUE, log.p = FALSE)
                  pbeta(q, 0.5, 0.5, lower.tail = lower.tail, log.p = log.p),
                function(x, log = FALSE) dbeta(x, 0.5, 0.5, log = log),
                function(p) qbeta(p, 0.5, 0.5), support = c(0, 1), symmetric = TRUE)
+  ref <- function(n) vapply(1:2, function(k)   # beyond v = 80 the factor (1 - v/n)^(n-1) is below 1e-34
+    integrate(function(v) (n^2 * sin(pi * v / (2 * n))^2)^k * exp((n - 1) * log1p(-v / n)),
+              0, min(n, 80), rel.tol = 1e-12)$value, numeric(1))
   for (n in c(10L, 100L)) {
-    a <- vapply(1:2, function(k) integrate(function(v) (n^2 * sin(pi * v / (2 * n))^2)^k *
-                                              exp((n - 1) * log1p(-v / n)), 0, n, rel.tol = 1e-12)$value,
-                numeric(1))
+    a <- ref(n)
     m <- os_moments(n, c(1L, n), dist = b, cov = FALSE)
     expect_lt(abs(m$alpha[[1]] / (a[1] / n^2) - 1), 1e-10)
     expect_lt(abs(m$var[[1]] / ((a[2] - a[1]^2) / n^4) - 1), 1e-10)
+    expect_lt(abs(m$var[[2]] / m$var[[1]] - 1), 1e-8)          # the maximum mirrors the minimum
   }
-  expect_error(os_moments(1000L, c(1L, 1000L), dist = b, cov = FALSE), "os_moments")
-  expect_error(os_moments(100000L, c(1L, 100000L), dist = b, cov = FALSE), "os_moments")
+  for (n in c(1000L, 100000L)) {
+    a <- ref(n)
+    m <- os_moments(n, 1L, dist = b, cov = FALSE)
+    expect_lt(abs(m$alpha[[1]] / (a[1] / n^2) - 1), 1e-10)
+    expect_lt(abs(m$var[[1]] / ((a[2] - a[1]^2) / n^4) - 1), 1e-9)
+    expect_error(os_moments(n, n, dist = b, cov = FALSE), "os_moments")
+  }
 })
 
 test_that("the spread is applied one factor at a time", {

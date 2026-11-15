@@ -73,8 +73,8 @@ test_that("os_blue() reproduces the reference engine's BLUE for the five-number 
   for (n in unique(fx$n)) for (sc in unique(fx$scenario)) {
     f <- fx[fx$n == n & fx$scenario == sc, ]
     b <- os_blue(os_moments(n, f$rank))
-    worst_w <- max(worst_w, abs(b$w_location - f$w_mu), abs(b$w_scale - f$w_sig))
-    worst_v <- max(worst_v, abs(b$var_location - f$var_mean[1]), abs(b$var_scale - f$var_sd[1]),
+    worst_w <- max(worst_w, abs(b$w_mu - f$w_mu), abs(b$w_sigma - f$w_sig))
+    worst_v <- max(worst_v, abs(b$var_mu - f$var_mean[1]), abs(b$var_sigma - f$var_sd[1]),
                    abs(b$cov - f$cov[1]))
   }
   expect_lt(worst_w, 1e-10)
@@ -87,40 +87,40 @@ test_that("os_blue() is the generalized least squares estimator, with its identi
     b <- os_blue(m)
     A <- cbind(1, m$alpha); Om <- solve(m$B)
     G <- solve(crossprod(A, Om %*% A), crossprod(A, Om))             # rows: the two weight vectors
-    expect_lt(max(abs(b$w_location - G[1, ])), 1e-12)
-    expect_lt(max(abs(b$w_scale - G[2, ])), 1e-12)
-    expect_lt(abs(sum(b$w_location) - 1), 1e-12)                    # unbiased for location
-    expect_lt(abs(sum(b$w_location * m$alpha)), 1e-12)
-    expect_lt(abs(sum(b$w_scale)), 1e-12)                            # unbiased for scale
-    expect_lt(abs(sum(b$w_scale * m$alpha) - 1), 1e-12)
+    expect_lt(max(abs(b$w_mu - G[1, ])), 1e-12)
+    expect_lt(max(abs(b$w_sigma - G[2, ])), 1e-12)
+    expect_lt(abs(sum(b$w_mu) - 1), 1e-12)                    # unbiased for location
+    expect_lt(abs(sum(b$w_mu * m$alpha)), 1e-12)
+    expect_lt(abs(sum(b$w_sigma)), 1e-12)                            # unbiased for scale
+    expect_lt(abs(sum(b$w_sigma * m$alpha) - 1), 1e-12)
     V <- solve(crossprod(A, Om %*% A))
-    expect_lt(abs(b$var_location - V[1, 1]), 1e-12)
-    expect_lt(abs(b$var_scale - V[2, 2]), 1e-12)
+    expect_lt(abs(b$var_mu - V[1, 1]), 1e-12)
+    expect_lt(abs(b$var_sigma - V[2, 2]), 1e-12)
     expect_lt(abs(b$cov - V[1, 2]), 1e-12)
-    expect_lt(abs(b$var_location - os_lin_moments(b$w_location, m)$var[[1]]), 1e-12)
+    expect_lt(abs(b$var_mu - os_lin_moments(b$w_mu, m)$var[[1]]), 1e-12)
   }
   # three symmetric ranks: the scale BLUE is the range over its expectation, and the
   # location and scale estimators are uncorrelated
   m <- os_moments(41, c(1, 21, 41))
   b <- os_blue(m)
-  expect_lt(max(abs(b$w_scale - c(-1, 0, 1) / (2 * m$alpha[[3]]))), 1e-7)
+  expect_lt(max(abs(b$w_sigma - c(-1, 0, 1) / (2 * m$alpha[[3]]))), 1e-7)
   expect_lt(abs(b$cov), 1e-8)
 })
 
 test_that("os_blue() does not depend on location and scale, and refuses what it cannot do", {
   z <- os_blue(os_moments(13, c(1, 4, 7, 10, 13)))
-  s <- os_blue(os_moments(13, c(1, 4, 7, 10, 13), location = -2, scale = 3))
-  expect_lt(max(abs(z$w_location - s$w_location)), 1e-12)
-  expect_lt(max(abs(z$w_scale - s$w_scale)), 1e-12)
-  expect_lt(abs(z$var_scale - s$var_scale), 1e-12)
+  s <- os_blue(os_moments(13, c(1, 4, 7, 10, 13), mean = -2, sd = 3))
+  expect_lt(max(abs(z$w_mu - s$w_mu)), 1e-12)
+  expect_lt(max(abs(z$w_sigma - s$w_sigma)), 1e-12)
+  expect_lt(abs(z$var_sigma - s$var_sigma), 1e-12)
   # at a location of 1e15 the subtraction (alpha - location)/scale lost the means' digits
   # (the scale weights' expectation came out as 0.994); the standard member's moments
   # kept in the object give the same weights as at location 0
-  big <- os_blue(os_moments(13, c(1, 4, 7, 10, 13), location = 1e15))
-  expect_identical(big$w_location, z$w_location)
-  expect_identical(big$w_scale, z$w_scale)
+  big <- os_blue(os_moments(13, c(1, 4, 7, 10, 13), mean = 1e15))
+  expect_identical(big$w_mu, z$w_mu)
+  expect_identical(big$w_sigma, z$w_sigma)
   e <- os_blue(os_moments(10, c(1, 10), "exp"))                     # the scale is 1/rate
-  expect_lt(abs(sum(e$w_scale * (os_moments(10, c(1, 10), "exp")$alpha)) - 1), 1e-12)
+  expect_lt(abs(sum(e$w_sigma * (os_moments(10, c(1, 10), "exp")$alpha)) - 1), 1e-12)
   expect_error(os_blue(os_moments(10, 5)), "two distinct ranks")
   expect_error(os_blue(os_moments(10, c(1, 10), cov = FALSE)), "cov = FALSE")
   expect_error(os_blue(42), "os_moments")
@@ -134,10 +134,10 @@ test_that("os_blue() keeps the unbiasedness conditions when the means are nearly
   m <- os_moments(n, c(n - 1, n), "unif")
   expect_silent(b <- os_blue(m))
   a <- unname(m$alpha)
-  expect_lt(max(abs(c(sum(b$w_location) - 1, sum(b$w_location * a),
-                      sum(b$w_scale), sum(b$w_scale * a) - 1))), 1e-6)
-  expect_lt(max(abs(unname(b$w_location) / c(n, -(n - 1)) - 1)), 1e-6)
-  expect_lt(max(abs(unname(b$w_scale) / c(-(n + 1), n + 1) - 1)), 1e-6)
+  expect_lt(max(abs(c(sum(b$w_mu) - 1, sum(b$w_mu * a),
+                      sum(b$w_sigma), sum(b$w_sigma * a) - 1))), 1e-6)
+  expect_lt(max(abs(unname(b$w_mu) / c(n, -(n - 1)) - 1)), 1e-6)
+  expect_lt(max(abs(unname(b$w_sigma) / c(-(n + 1), n + 1) - 1)), 1e-6)
 })
 
 test_that("the quantile labels are those of quantile(), also at 100 probabilities", {
@@ -154,7 +154,7 @@ test_that("os_lin_moments() requires finite weights", {
 test_that("os_lin_moments() keeps a location-free statistic exact at a large location", {
   # the range of two uniform observations at location 1e16 came out as 0 instead of 1/3
   # when the means were multiplied after the location was added
-  m <- os_moments(2, dist = "unif", location = 1e16)
+  m <- os_moments(2, dist = "unif", os_shift = 1e16)
   r <- os_lin_moments(c(-1, 1), m)
   expect_equal(r$mean, 1 / 3)
   expect_equal(r$var, 1 / 18)

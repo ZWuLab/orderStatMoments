@@ -2,13 +2,13 @@
 # File: os_checks.R
 # Purpose: The conditions and run-time checks of orderStatMoments: the moment
 #          condition by rank from the tail indices, the finiteness probe of a
-#          distribution's log-tails at the split points, the reflection check
+#          distribution's log-tails at the cut points, the reflection check
 #          for a symmetric parent, and the permutation identities on a complete
 #          rank set.
 #
 # INTERNAL HELPERS:
 #   - .os_moment_condition()  E|X_(r)|^k < Inf iff nu_L r > k and nu_U (n-r+1) > k
-#   - .os_tail_probe()        log F, log S, log f finite at the split points and the center
+#   - .os_tail_probe()        log F, log S, log f finite at the cut points and the center
 #   - .os_reflection_check()  alpha_i = -alpha_{k+1-i}, E[X_(r_i)^2] = E[X_(r_{k+1-i})^2]
 #   - .os_parent_moments()    E[X] and E[X^2] of the standard member, centered
 #   - .os_identity_check()    the permutation identities, and the unit row sums for the normal
@@ -39,21 +39,27 @@
 
 #' Probe the log-tails and the log-density where the integrands are evaluated
 #'
-#' Evaluates log F, log S and log f of the centered standard member at the split
+#' Evaluates log F, log S and log f of the centered standard member at the cut
 #' points of the smallest and the largest requested rank and at the center, and
 #' stops if any value is not finite. Catches a user function that ignores log.p
-#' or lower.tail, or whose tail underflows where the integrand still matters. It
-#' does not certify accuracy.
+#' or lower.tail, or whose tail underflows where the integrand still matters. The
+#' points that `dist` declares in `breaks` are probed in the distribution's own
+#' units, with a zero density allowed. It does not certify accuracy.
 #' @keywords internal
 #' @noRd
-.os_tail_probe <- function(ranks, n, cd, ctrl) {
-  pts <- unique(c(0, .os_breaks(min(ranks), n, cd, ctrl$k), .os_breaks(max(ranks), n, cd, ctrl$k)))
+.os_tail_probe <- function(ranks, n, cd, ctrl, dist) {
+  pts <- unique(c(0, .os_breaks(min(ranks), n, cd, ctrl$k, kinks = FALSE),
+                  .os_breaks(max(ranks), n, cd, ctrl$k, kinks = FALSE)))
   xs <- cd$center + cd$spread * pts            # the same points in the standard member's units
   vals <- list(`p(x, log.p = TRUE)` = cd$lF(pts),
                `p(x, lower.tail = FALSE, log.p = TRUE)` = cd$lS(pts),
                `d(x, log = TRUE)` = cd$ld(pts))
+  # a declared point of `breaks` may have zero density (see below), also when it happens
+  # to be one of the points probed here
+  declared <- pts %in% cd$kinks | xs %in% dist$breaks
   for (nm in names(vals)) {
     bad <- !is.finite(vals[[nm]])
+    if (nm == "d(x, log = TRUE)") bad <- bad & !(declared & vals[[nm]] %in% -Inf)
     if (any(bad))
       stop("os_moments(): ", nm, " is not finite at x = ",
            paste(signif(xs[bad], 6), collapse = ", "),
@@ -61,6 +67,29 @@
            "where the order statistics have their mass. Check that 'support' in os_dist() ",
            "gives the endpoints of a bounded or semi-bounded distribution, and that 'p' ",
            "honors log.p and lower.tail", call. = FALSE)
+  }
+  # The declared points where the density is not smooth are cut points of every integral.
+  # They are probed in the distribution's own units, because such a point next to an
+  # endpoint can round to it in the standardized units. The density may be zero there (a
+  # log-density of -Inf, as for a density proportional to |x - a| at a), which the
+  # integrals handle. It may not be infinite or undefined.
+  bk <- dist$breaks
+  if (length(bk)) {
+    tails <- list(`p(x, log.p = TRUE)` = dist$p(bk, lower.tail = TRUE, log.p = TRUE),
+                  `p(x, lower.tail = FALSE, log.p = TRUE)` = dist$p(bk, lower.tail = FALSE, log.p = TRUE))
+    for (nm in names(tails)) {
+      bad <- !is.finite(tails[[nm]])
+      if (any(bad))
+        stop("os_moments(): ", nm, " is not finite at the declared point of 'breaks' x = ",
+             paste(signif(bk[bad], 6), collapse = ", "),
+             "; a point of 'breaks' lies inside the support, where both tails have ",
+             "positive probability", call. = FALSE)
+    }
+    ldb <- dist$d(bk, log = TRUE)
+    bad <- is.na(ldb) | ldb == Inf
+    if (any(bad))
+      stop("os_moments(): d(x, log = TRUE) is infinite or undefined at the declared point ",
+           "of 'breaks' x = ", paste(signif(bk[bad], 6), collapse = ", "), call. = FALSE)
   }
   invisible(TRUE)
 }

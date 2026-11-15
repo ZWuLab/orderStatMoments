@@ -129,10 +129,11 @@ os_lin_moments <- function(w, mom) {
   if (nrow(W) != k)
     stop("os_lin_moments(): 'w' must have one weight per rank of 'mom' (", k, " ranks: ",
          paste(mom$ranks, collapse = ", "), ")", call. = FALSE)
-  # from the standard member's moments, so that a large location does not take the digits
-  # of a location-free statistic (the range at location 1e16 came out as 0 instead of 1/3)
-  mean <- mom$location * colSums(W) + mom$scale * drop(crossprod(W, mom$standard$alpha))
-  cov <- mom$scale * (mom$scale * crossprod(W, mom$standard$B %*% W))
+  # from the standard member's moments, so that a large shift does not take the digits
+  # of a shift-free statistic (the range at a shift of 1e16 came out as 0 instead of 1/3)
+  a <- mom$affine[["a"]]; b <- mom$affine[["b"]]       # Y = a + b Z for the standard member Z
+  mean <- a * colSums(W) + b * drop(crossprod(W, mom$standard$alpha))
+  cov <- b * (b * crossprod(W, mom$standard$B %*% W))
   nm <- colnames(W)
   if (!is.null(nm)) { names(mean) <- nm; dimnames(cov) <- list(nm, nm) } else names(mean) <- NULL
   list(mean = mean, var = diag(cov), cov = cov, ranks = mom$ranks)
@@ -151,15 +152,21 @@ os_lin_moments <- function(w, mom) {
 #'
 #' @param mom An object of class \code{"orderStatMoments"} computed with
 #'   \code{cov = TRUE} at two or more ranks. The weights are computed from
-#'   its \code{standard} component, the moments of the standard member, so
-#'   they do not depend on the \code{location} and \code{scale} it was
-#'   computed with.
+#'   its \code{standard} component, the moments of the standard member of
+#'   the family (the member with the shape parameters of the call and no shift
+#'   or multiplier), so they do not depend on the other parameters of the
+#'   family or on the \code{os_shift} and \code{os_multiplier} it was computed
+#'   with.
 #'
-#' @return A list with \code{w_location} and \code{w_scale} (the weight vectors,
-#'   named by rank), \code{var_location}, \code{var_scale} and \code{cov} (the
-#'   variances and the covariance of the two estimators per unit of the squared
-#'   scale parameter, so that \eqn{\mathrm{Var}(\hat\mu) = \sigma^2 \cdot}
-#'   \code{var_location}), \code{ranks}, \code{n} and \code{dist}.
+#' @return A list with \code{w_mu} and \code{w_sigma} (the weight vectors of
+#'   \eqn{\hat\mu} and \eqn{\hat\sigma}, named by rank), \code{var_mu},
+#'   \code{var_sigma} and \code{cov} (the variances and the covariance of the two
+#'   estimators per unit of the squared scale parameter, so that
+#'   \eqn{\mathrm{Var}(\hat\mu) = \sigma^2 \cdot} \code{var_mu}), \code{ranks},
+#'   \code{n} and \code{dist}. The names say which parameter of the location-scale
+#'   family each output belongs to, \eqn{\mu} or \eqn{\sigma}. These are the unknown
+#'   parameters that are estimated, as distinct from the known constants
+#'   \code{os_shift} and \code{os_multiplier} of \code{os_moments()}.
 #'
 #' @details
 #' With \eqn{\bm\Omega = \bm B^{-1}}, \eqn{a_{11} = \mathbf 1'\bm\Omega\mathbf 1},
@@ -182,20 +189,25 @@ os_lin_moments <- function(w, mom) {
 #' \eqn{\bm w_\sigma'\mathbf 1 = 0} and \eqn{\bm w_\sigma'\bm\alpha = 1}, and
 #' warns when one fails by more than \eqn{10^{-6}}.
 #'
-#' \strong{Conditions.} The distribution of \code{mom} is treated as the
-#' standard member of a location-scale family, which every \code{os_dist()}
-#' object is by construction; the required moments exist, which
-#' \code{os_moments()} has checked; at least two distinct ranks are present, so
-#' that the design \eqn{[\mathbf 1, \bm\alpha]} has rank two; and \eqn{\bm B} is
-#' positive definite. The scale estimated is the family's scale parameter: the
-#' standard deviation for the normal, the scale of the logistic or Gumbel, and
-#' the length of the support for the uniform.
+#' \strong{Conditions.} The standard member of \code{mom} is taken as the
+#' \eqn{Z} of the location-scale family \eqn{\mu + \sigma Z}. For a built-in
+#' family it is the member with the shape parameters of the call (the degrees
+#' of freedom of a \eqn{t}, the shape of a gamma or a Weibull, the
+#' \code{sdlog} of a lognormal), and for a user's distribution it is the
+#' distribution that \code{os_dist()} was given. The required moments exist,
+#' which \code{os_moments()} has checked; at least two distinct ranks are
+#' present, so that the design \eqn{[\mathbf 1, \bm\alpha]} has rank two; and
+#' \eqn{\bm B} is positive definite. The \eqn{\sigma} that is estimated is the
+#' multiplier of the standard member: the standard deviation for the normal,
+#' the scale of the logistic, the Gumbel, the gamma or the Weibull, the length
+#' of the support for the uniform, and \eqn{\exp(\mathrm{meanlog})} for the
+#' lognormal, with \eqn{\mu} a shift (a threshold) of the family.
 #'
 #' @examples
 #' m <- os_moments(9, ranks = c(1, 3, 5, 7, 9))
 #' b <- os_blue(m)
-#' b$w_location                     # sums to one
-#' sqrt(b$var_location)             # SD of the location estimate per unit sigma
+#' b$w_mu                           # sums to one
+#' sqrt(b$var_mu)                   # SD of the location estimate per unit sigma
 #' @references
 #' Lloyd, E. H. (1952). Least-squares estimation of location and scale
 #' parameters using order statistics. \emph{Biometrika}, 39(1-2), 88-95.
@@ -240,8 +252,8 @@ os_blue <- function(mom) {
             signif(resid, 3), "; the means at these ranks are too close together for the ",
             "estimators to be determined in double precision", call. = FALSE)
   names(w_mu) <- names(w_sig) <- names(mom$alpha)
-  list(w_location = w_mu, w_scale = w_sig,
-       var_location = V[1, 1], var_scale = V[2, 2], cov = V[1, 2],
+  list(w_mu = w_mu, w_sigma = w_sig,
+       var_mu = V[1, 1], var_sigma = V[2, 2], cov = V[1, 2],
        ranks = mom$ranks, n = mom$n, dist = mom$dist$name)
 }
 

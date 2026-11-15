@@ -8,19 +8,21 @@ the covariances of normal order statistics stop at n = 50 in the sources we foun
 software we found gives the moments of single order statistics or approximates the
 covariances of the normal by a series. orderStatMoments computes the exact means, variances and
 covariances of order statistics, at any ranks and any sample size, by numerical evaluation
-of the defining integrals. Five families are built in, the normal, uniform, exponential,
-logistic and Gumbel, and any other continuous distribution enters through its
-distribution, density and quantile functions. On top of the moments it gives those of
+of the defining integrals. Thirteen families are built in and are given as in R, by name
+and with R's own parameters: the normal, uniform, exponential, logistic, Gumbel, Student t,
+Cauchy, gamma, chi-square, beta, lognormal, Weibull and F distributions. Any other
+continuous distribution enters through its distribution, density and quantile functions. On top of the moments it gives those of
 sample quantiles and of any linear combination of order statistics, and Lloyd's best
 linear unbiased estimators of location and scale.
 
 The package has two requirements: the distribution must be continuous, and a moment is
-computed only if it exists, which the package checks rank by rank from the declared tail
-indices. The
-integrals are evaluated on the log scale with the integration range split around the peak
-of each order statistic's density, so a few ranks at a sample size in the thousands cost
-about as much as at n = 20, while a full covariance matrix grows with the square of n.
-Where a family has closed forms, they are returned instead of the quadrature.
+computed only if it exists, which the package checks rank by rank from the tail indices of
+the distribution. The integrals are evaluated in standardized units, each moment about the
+center of its own order statistic, with the integration range cut around the peak of each
+order statistic's density and the integrand on the log scale. So a few ranks at a sample
+size in the thousands cost about as much as at n = 20, while a full covariance matrix grows
+with the square of n. Where a family has closed forms, they are returned instead of the
+quadrature.
 
 The package's tests check the quadrature against four kinds of evidence. The closed forms
 of the uniform and the exponential are reproduced at the minimum, quartiles, median and
@@ -48,8 +50,12 @@ m <- os_moments(n = 25, ranks = c(1, 7, 13, 19, 25), dist = "norm")
 m$alpha
 m$B
 
-# the same ranks for a logistic distribution with location 10 and scale 2
-os_moments(25, ranks = c(1, 7, 13, 19, 25), dist = "logis", location = 10, scale = 2)
+# the same ranks for a gamma distribution, with the parameters of rgamma()
+os_moments(25, ranks = c(1, 7, 13, 19, 25), dist = "gamma", shape = 2, rate = 3)
+
+# a t distribution with 5 degrees of freedom, shifted by 10 and multiplied by 2
+os_moments(25, ranks = c(1, 7, 13, 19, 25), dist = "t", df = 5,
+           os_shift = 10, os_multiplier = 2)
 
 # the standard deviation of the median of an even-sized normal sample
 qw <- os_quantile_weights(p = 0.5, n = 10)
@@ -60,19 +66,27 @@ os_blue(m)
 ```
 
 A distribution that is not built in enters through `os_dist()`, with its distribution,
-density and quantile functions and the tail indices that decide which moments exist:
+density and quantile functions and the tail indices that decide which moments exist. Here
+is a Pareto distribution with shape 3 on [1, Inf):
 
 ```r
-t5 <- os_dist(
-  p = function(q, lower.tail = TRUE, log.p = FALSE) pt(q, 5, lower.tail = lower.tail, log.p = log.p),
-  d = function(x, log = FALSE) dt(x, 5, log = log),
-  q = function(p) qt(p, 5),
-  symmetric = TRUE, tail = c(5, 5), name = "t5"
+pareto3 <- os_dist(
+  p = function(q, lower.tail = TRUE, log.p = FALSE) {
+    ls <- -3 * log(pmax(q, 1))                        # log S(x) = -3 log(x)
+    if (lower.tail) { if (log.p) log(-expm1(ls)) else -expm1(ls) }
+    else if (log.p) ls else exp(ls)
+  },
+  d = function(x, log = FALSE) {
+    ld <- ifelse(x >= 1, log(3) - 4 * log(x), -Inf)
+    if (log) ld else exp(ld)
+  },
+  q = function(p) (1 - p)^(-1 / 3),
+  support = c(1, Inf), tail = c(Inf, 3), name = "pareto3"
 )
-os_moments(5, dist = t5)
+os_moments(5, dist = pareto3)
 ```
 
-The vignette walks through the families, a user-supplied distribution, the linear layer,
+The vignette walks through the families and their parameters, a user-supplied distribution, the linear layer,
 what the result holds and how the integrals are evaluated. It is at
 https://zwulab.github.io/orderStatMoments/ and, after the installation above,
 `vignette("orderStatMoments")`.
@@ -82,8 +96,8 @@ https://zwulab.github.io/orderStatMoments/ and, after the installation above,
 The paper that describes the package, its verification and the comparison with other
 software is
 
-Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances and covariances of order
-statistics in R. Manuscript.
+Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances, and covariances of
+order statistics in R. Manuscript.
 
 `citation("orderStatMoments")` prints this reference.
 
