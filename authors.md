@@ -7,14 +7,16 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/ZWuLab/orderStatMoments/blob/v0.3.0/inst/CITATION)
+[`inst/CITATION`](https://github.com/ZWuLab/orderStatMoments/blob/main/inst/CITATION)
 
 Wu, Z. and Tong, T. (2026). orderStatMoments: Exact Means, Variances,
-and Covariances of Order Statistics in R. Manuscript.
+and Covariances of Order Statistics in R. arXiv preprint
+arXiv:2611.19980. doi:10.48550/arXiv.2611.19980.
 
-    @Unpublished{,
+    @Misc{,
       title = {orderStatMoments: Exact Means, Variances, and Covariances of Order Statistics in R},
       author = {Zheyang Wu and Tiejun Tong},
       year = {2026},
-      note = {Manuscript},
+      howpublished = {arXiv preprint arXiv:2611.19980},
+      doi = {10.48550/arXiv.2611.19980},
     }

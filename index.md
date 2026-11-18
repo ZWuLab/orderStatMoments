@@ -110,7 +110,8 @@ The paper that describes the package, its verification and the
 comparison with other software is
 
 Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances,
-and covariances of order statistics in R. Manuscript.
+and covariances of order statistics in R. arXiv preprint
+arXiv:2611.19980. <https://doi.org/10.48550/arXiv.2611.19980>
 
 `citation("orderStatMoments")` prints this reference.
 

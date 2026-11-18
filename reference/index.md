@@ -3,7 +3,7 @@
 ## Moments of order statistics
 
 The exact means, variances and covariances at any ranks and any sample
-size, for five built-in families or a user-supplied distribution.
+size, for thirteen built-in families or a user-supplied distribution.
 
 - [`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
   : Exact moments of order statistics

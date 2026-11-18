@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">orderStatMoments</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,9 +31,16 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/ZWuLab/orderStatMoments/blob/v0.3.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/ZWuLab/orderStatMoments/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.1" id="orderstatmoments-031">orderStatMoments 0.3.1<a class="anchor" aria-label="anchor" href="#orderstatmoments-031"></a></h2>
+<ul><li>The paper that describes the package, Wu and Tong (2026), is now cited as arXiv:2611.19980 (<a href="https://doi.org/10.48550/arXiv.2611.19980" class="external-link uri">https://doi.org/10.48550/arXiv.2611.19980</a>), where it was cited as a manuscript. The new citation is given by <code>citation("orderStatMoments")</code>, the help pages of the package and of <code><a href="../reference/os_moments.html">os_moments()</a></code>, the README and the vignette.</li>
+<li>The DOIs in the reference list of the vignette are links to <a href="https://doi.org/" class="external-link uri">https://doi.org/</a>.</li>
+<li>The reference index of the package’s website names thirteen built-in families, where it said five.</li>
+<li>No function, argument or result changes: the computations are those of 0.3.0.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="orderstatmoments-030">orderStatMoments 0.3.0<a class="anchor" aria-label="anchor" href="#orderstatmoments-030"></a></h2>
 <ul><li>Eight families are added, so that the built-in families are the twelve continuous distributions for which base R provides the <code>p</code>, <code>d</code> and <code>q</code> functions, and the Gumbel: <code>"t"</code>, <code>"cauchy"</code>, <code>"gamma"</code>, <code>"chisq"</code>, <code>"beta"</code>, <code>"lnorm"</code>, <code>"weibull"</code> and <code>"f"</code> join <code>"norm"</code>, <code>"unif"</code>, <code>"exp"</code>, <code>"logis"</code> and <code>"gumbel"</code>. The package sets their supports and their tail indices, so a moment that does not exist (the variance of the minimum of a Cauchy sample) is refused without a declaration by the user. The noncentral versions (R’s <code>ncp</code>) are not built in.</li>

@@ -129,9 +129,9 @@ round(1000 * c(three_means_and_variances = t_single,
                with_three_covariances = t_pairs,
                full_matrix_n10 = t_full10, full_matrix_n20 = t_full20))
 #> three_means_and_variances    with_three_covariances           full_matrix_n10 
-#>                         4                       312                      1554 
+#>                         5                       443                      2272 
 #>           full_matrix_n20 
-#>                      6671
+#>                      9667
 ```
 
 The computing cost of one integral hardly depends on $`n`$. On an Apple
@@ -146,7 +146,7 @@ A full matrix is different. At sample size $`n`$ it needs $`n(n-1)/2`$
 covariances, or about half as many for a symmetric family, so its time
 grows with the square of $`n`$. By that count, the full matrix at
 $`n = 100`$ costs about 26 times the one at $`n = 20`$ above. On the
-machine that built this vignette, that predicts about 173 seconds. On
+machine that built this vignette, that predicts about 251 seconds. On
 the M3 Pro, the full normal matrix took 2.4 minutes at $`n = 100`$ on
 one core, and 70 minutes at $`n = 1001`$ on 12 cores. For $`n`$ in the
 hundreds, run one call of
@@ -878,23 +878,24 @@ skipped on CRAN to save time.
 ## References
 
 David, H. A. and Nagaraja, H. N. (2003). *Order Statistics*, third
-edition. John Wiley and Sons, Hoboken. <doi:10.1002/0471722162>.
+edition. John Wiley and Sons, Hoboken.
+<https://doi.org/10.1002/0471722162>.
 
 Harter, H. L. (1960). Tables of range and studentized range. *The Annals
 of Mathematical Statistics*, 31(4), 1122-1147.
-<doi:10.1214/aoms/1177705684>.
+<https://doi.org/10.1214/aoms/1177705684>.
 
 Hyndman, R. J. and Fan, Y. (1996). Sample quantiles in statistical
 packages. *The American Statistician*, 50(4), 361-365.
-<doi:10.1080/00031305.1996.10473566>.
+<https://doi.org/10.1080/00031305.1996.10473566>.
 
 Lloyd, E. H. (1952). Least-squares estimation of location and scale
 parameters using order statistics. *Biometrika*, 39(1-2), 88-95.
-<doi:10.1093/biomet/39.1-2.88>.
+<https://doi.org/10.1093/biomet/39.1-2.88>.
 
 Royston, J. P. (1982). Algorithm AS 177: Expected normal order
 statistics (exact and approximate). *Applied Statistics*, 31(2),
-161-165. <doi:10.2307/2347982>.
+161-165. <https://doi.org/10.2307/2347982>.
 
 Tietjen, G. L., Kahaner, D. K. and Beckman, R. J. (1976). Variances and
 covariances of the normal order statistics for sample sizes 2 to 50.
@@ -902,4 +903,5 @@ Report LA-6482-MS, Los Alamos Scientific Laboratory, Los Alamos, New
 Mexico.
 
 Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances,
-and covariances of order statistics in R. Manuscript.
+and covariances of order statistics in R. arXiv preprint
+arXiv:2611.19980. <https://doi.org/10.48550/arXiv.2611.19980>.

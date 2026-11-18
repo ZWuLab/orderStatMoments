@@ -110,7 +110,8 @@ The paper that describes the package, its verification and the
 comparison with other software is
 
 Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances,
-and covariances of order statistics in R. Manuscript.
+and covariances of order statistics in R. arXiv preprint
+arXiv:2611.19980. <https://doi.org/10.48550/arXiv.2611.19980>
 
 `citation("orderStatMoments")` prints this reference.
 
@@ -135,7 +136,7 @@ GPL (\>= 3).
 ## Moments of order statistics
 
 The exact means, variances and covariances at any ranks and any sample
-size, for five built-in families or a user-supplied distribution.
+size, for thirteen built-in families or a user-supplied distribution.
 
 - [`os_moments()`](https://zwulab.github.io/orderStatMoments/reference/os_moments.md)
   : Exact moments of order statistics
