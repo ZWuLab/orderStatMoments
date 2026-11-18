@@ -337,7 +337,8 @@ try(os_moments(5, ranks = 1, dist = "cauchy"))
 }
 \references{
 Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances, and covariances
-of order statistics in R. Manuscript. The computation, its verification and
+of order statistics in R. arXiv preprint arXiv:2611.19980.
+\doi{10.48550/arXiv.2611.19980}. The computation, its verification and
 the comparison with other software.
 
 Royston, J. P. (1982). Algorithm AS 177: Expected normal order statistics

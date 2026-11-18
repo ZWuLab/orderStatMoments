@@ -3,7 +3,7 @@ template:
   bootstrap: 5
 reference:
 - title: Moments of order statistics
-  desc: The exact means, variances and covariances at any ranks and any sample size, for five built-in families or a user-supplied distribution.
+  desc: The exact means, variances and covariances at any ranks and any sample size, for thirteen built-in families or a user-supplied distribution.
   contents:
   - os_moments
   - os_dist

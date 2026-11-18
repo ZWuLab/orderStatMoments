@@ -1,3 +1,17 @@
+# orderStatMoments 0.3.1
+
+* The paper that describes the package, Wu and Tong (2026), is now cited as
+  arXiv:2611.19980 (<https://doi.org/10.48550/arXiv.2611.19980>), where it was
+  cited as a manuscript. The new citation is given by
+  `citation("orderStatMoments")`, the help pages of the package and of
+  `os_moments()`, the README and the vignette.
+* The DOIs in the reference list of the vignette are links to
+  <https://doi.org/>.
+* The reference index of the package's website names thirteen built-in
+  families, where it said five.
+* No function, argument or result changes: the computations are those of
+  0.3.0.
+
 # orderStatMoments 0.3.0
 
 * Eight families are added, so that the built-in families are the twelve

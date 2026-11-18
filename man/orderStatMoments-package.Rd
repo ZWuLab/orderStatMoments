@@ -30,7 +30,8 @@ gives the reference.
 }
 \references{
 Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances, and covariances
-of order statistics in R. Manuscript.
+of order statistics in R. arXiv preprint arXiv:2611.19980.
+\doi{10.48550/arXiv.2611.19980}.
 }
 \seealso{
 Useful links:

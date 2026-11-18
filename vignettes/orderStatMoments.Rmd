@@ -645,23 +645,23 @@ with the earlier implementation, the second-last item, is skipped on CRAN to sav
 ## References
 
 David, H. A. and Nagaraja, H. N. (2003). *Order Statistics*, third edition. John Wiley
-and Sons, Hoboken. doi:10.1002/0471722162.
+and Sons, Hoboken. <https://doi.org/10.1002/0471722162>.
 
 Harter, H. L. (1960). Tables of range and studentized range. *The Annals of Mathematical
-Statistics*, 31(4), 1122-1147. doi:10.1214/aoms/1177705684.
+Statistics*, 31(4), 1122-1147. <https://doi.org/10.1214/aoms/1177705684>.
 
 Hyndman, R. J. and Fan, Y. (1996). Sample quantiles in statistical packages. *The
-American Statistician*, 50(4), 361-365. doi:10.1080/00031305.1996.10473566.
+American Statistician*, 50(4), 361-365. <https://doi.org/10.1080/00031305.1996.10473566>.
 
 Lloyd, E. H. (1952). Least-squares estimation of location and scale parameters using
-order statistics. *Biometrika*, 39(1-2), 88-95. doi:10.1093/biomet/39.1-2.88.
+order statistics. *Biometrika*, 39(1-2), 88-95. <https://doi.org/10.1093/biomet/39.1-2.88>.
 
 Royston, J. P. (1982). Algorithm AS 177: Expected normal order statistics (exact and
-approximate). *Applied Statistics*, 31(2), 161-165. doi:10.2307/2347982.
+approximate). *Applied Statistics*, 31(2), 161-165. <https://doi.org/10.2307/2347982>.
 
 Tietjen, G. L., Kahaner, D. K. and Beckman, R. J. (1976). Variances and covariances of
 the normal order statistics for sample sizes 2 to 50. Report LA-6482-MS, Los Alamos
 Scientific Laboratory, Los Alamos, New Mexico.
 
 Wu, Z. and Tong, T. (2026). orderStatMoments: Exact means, variances, and covariances of
-order statistics in R. Manuscript.
+order statistics in R. arXiv preprint arXiv:2611.19980. <https://doi.org/10.48550/arXiv.2611.19980>.
